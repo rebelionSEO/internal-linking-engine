@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Internal Linking Map — Azarian Growth Agency</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: #020817;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+  #root { width: 100%; }
+
+  /* ── header ── */
+  .app-header {
+    padding: 20px 28px 16px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #1e293b;
+    background: linear-gradient(180deg,#0d1b2e 0%,transparent 100%);
+  }
+  .header-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #3B82F6;
+    margin-bottom: 4px;
+  }
+  .header-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+  }
+  .header-sub {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+  }
+
+  /* ── filter bar ── */
+  .filter-bar {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .fbtn {
+    padding: 6px 15px;
+    border-radius: 99px;
+    border: 1px solid #1e293b;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    background: #0f172a;
+    color: #64748b;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .fbtn:hover { border-color: #334155; color: #94a3b8; }
+  .fbtn.active-all   { background:#3B82F6; border-color:#3B82F6; color:#fff; }
+  .fbtn.active-exist { background:#475569; border-color:#475569; color:#fff; }
+  .fbtn.active-rec   { background:#22c55e; border-color:#22c55e; color:#000; }
+  .fbtn.active-crit  { background:#f59e0b; border-color:#f59e0b; color:#000; }
+
+  /* ── map ── */
+  .map-wrap {
+    padding: 16px 28px 0;
+  }
+  .svg-container {
+    background: #040e1f;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── legend ── */
+  .legend-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 28px;
+    border-top: 1px solid #1e293b;
+  }
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 11px;
+  }
+  .legend-group-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #334155;
+    min-width: 44px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #94a3b8;
+  }
+
+  /* ── stats ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    padding: 16px 28px 28px;
+  }
+  .stat-card {
+    background: rgba(15,23,42,0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: #334155; }
+  .stat-accent {
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    border-radius: 12px 0 0 12px;
+  }
+  .stat-value {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-top: 7px;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+
+  /* ── tooltip ── */
+  .tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(10,20,40,0.96);
+    backdrop-filter: blur(20px);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 12px;
+    max-width: 270px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+    z-index: 200;
+    line-height: 1.6;
+  }
+  .t-title { font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 3px; }
+  .t-url { color: #475569; font-size: 10px; font-family: monospace; word-break: break-all; margin-bottom: 8px; }
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 9px; border-radius: 99px;
+    font-size: 10px; font-weight: 600;
+    margin-right: 4px; margin-top: 3px;
+  }
+  .t-stats {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #1e293b;
+    font-size: 11px;
+    color: #64748b;
+    display: flex;
+    gap: 12px;
+  }
+  .t-stats span { color: #94a3b8; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const W = 1380, H = 810;
+
+// ── data ───────────────────────────────────────────────────────────────────
+const NODES = [
+  // CLUSTER 1 — SaaS (blue) ─────────────────────────────────
+  { id:'saas-pillar',  label:'SaaS Hub',             url:'/industries/saas/',                                        cluster:1, stage:'Awareness',     role:'Pillar',     x:172, y:190, size:28 },
+  { id:'burn',         label:'Burn Rate Calc',        url:'/marketing-tools/burn-rate-calculator/',                   cluster:1, stage:'Awareness',     role:'Supporting', x:65,  y:300, size:15 },
+  { id:'cac',          label:'CAC Calc',              url:'/marketing-tools/cac-calculator/',                         cluster:1, stage:'Awareness',     role:'Supporting', x:172, y:330, size:15 },
+  { id:'churn',        label:'Churn Rate Calc',       url:'/marketing-tools/churn-rate-calculator/',                  cluster:1, stage:'Awareness',     role:'Supporting', x:65,  y:370, size:13 },
+  { id:'retention',    label:'Retention Calc',        url:'/marketing-tools/retention-rate-calculator/',              cluster:1, stage:'Awareness',     role:'Supporting', x:172, y:400, size:12 },
+  { id:'pod-startup',  label:'Podcast: Grow Startup', url:'/featured-podcasts/how-to-effectively-grow-a-startup/',   cluster:1, stage:'Awareness',     role:'Supporting', x:315, y:245, size:15 },
+  { id:'pod-hacks',    label:'Podcast: Growth Hacks', url:'/featured-podcasts/growth-hacks-to-effectively-and-efficiently-grow-a-startup/', cluster:1, stage:'Awareness', role:'Supporting', x:315, y:310, size:13 },
+  // Consideration
+  { id:'cs-camino',    label:'Case Study: Camino',    url:'/case-studies/camino-financial/',                          cluster:1, stage:'Consideration', role:'Supporting', x:570, y:118, size:16 },
+  { id:'cs-goodhood',  label:'Case Study: Goodhood',  url:'/case-studies/goodhood/',                                  cluster:1, stage:'Consideration', role:'Supporting', x:570, y:215, size:15 },
+  { id:'cs-orders',    label:'Case Study: Orders.co', url:'/case-studies/orders-co/',                                 cluster:1, stage:'Consideration', role:'Supporting', x:570, y:308, size:15 },
+  // Decision
+  { id:'startup-svc',  label:'Startup Marketing',     url:'/industries/saas/startup-marketing-agency/',              cluster:1, stage:'Decision',       role:'Conversion', x:900, y:112, size:24, primary:true },
+  { id:'b2c-svc',      label:'B2C Marketing',         url:'/industries/saas/b2c-marketing-agency/',                  cluster:1, stage:'Decision',       role:'Conversion', x:900, y:215, size:22, primary:true },
+  { id:'b2b-svc',      label:'B2B SaaS Marketing',    url:'/industries/saas/b2b-marketing-agency/',                  cluster:1, stage:'Decision',       role:'Conversion', x:900, y:313, size:17 },
+  { id:'ent-svc',      label:'Enterprise SaaS',       url:'/industries/saas/enterprise-digital-marketing-agency/',   cluster:1, stage:'Decision',       role:'Conversion', x:900, y:400, size:15 },
+
+  // CLUSTER 2 — PE/VC (purple) ──────────────────────────────
+  { id:'pm-pillar',    label:'Private Markets Hub',   url:'/industries/private-markets/',                             cluster:2, stage:'Awareness',     role:'Pillar',     x:172, y:568, size:24 },
+  { id:'pod-pe',       label:'Podcast: Early Startups',url:'/featured-podcasts/supporting-early-stage-startups-in-armenia-and-the-united-states/', cluster:2, stage:'Awareness', role:'Supporting', x:315, y:643, size:13 },
+  // Consideration
+  { id:'cs-anzu',      label:'Case Study: Anzu Global',url:'/case-studies/anzu-global/',                             cluster:2, stage:'Consideration', role:'Supporting', x:570, y:588, size:15 },
+  // Decision
+  { id:'pe-svc',       label:'PE Firms',              url:'/industries/private-markets/private-equity-firms/',        cluster:2, stage:'Decision',       role:'Conversion', x:900, y:533, size:22, primary:true },
+  { id:'vc-svc',       label:'VC Firms',              url:'/industries/private-markets/venture-capital-firms/',       cluster:2, stage:'Decision',       role:'Conversion', x:900, y:644, size:20 },
+
+  // SHARED
+  { id:'contact',      label:'Contact Us',            url:'/contact-us/',                                             cluster:0, stage:'Decision',       role:'Conversion', x:1190, y:377, size:26 },
+];
+
+const EDGES = [
+  // existing regressions — conversion → case studies (backward)
+  { from:'startup-svc', to:'cs-camino',   type:'existing', regression:true },
+  { from:'startup-svc', to:'cs-goodhood', type:'existing', regression:true },
+  { from:'startup-svc', to:'cs-orders',   type:'existing', regression:true },
+  { from:'b2c-svc',     to:'cs-camino',   type:'existing', regression:true },
+  { from:'b2c-svc',     to:'cs-goodhood', type:'existing', regression:true },
+  { from:'b2c-svc',     to:'cs-orders',   type:'existing', regression:true },
+  // existing authority — case studies → saas pillar
+  { from:'cs-camino',   to:'saas-pillar', type:'existing', authority:true },
+  { from:'cs-goodhood', to:'saas-pillar', type:'existing', authority:true },
+  { from:'cs-orders',   to:'saas-pillar', type:'existing', authority:true },
+  { from:'cs-anzu',     to:'saas-pillar', type:'existing', authority:true },
+  // recommended critical
+  { from:'saas-pillar', to:'startup-svc', type:'recommended', priority:'critical' },
+  { from:'saas-pillar', to:'b2c-svc',     type:'recommended', priority:'critical' },
+  { from:'pm-pillar',   to:'pe-svc',      type:'recommended', priority:'critical' },
+  { from:'pm-pillar',   to:'vc-svc',      type:'recommended', priority:'critical' },
+  { from:'startup-svc', to:'contact',     type:'recommended', priority:'critical' },
+  { from:'b2c-svc',     to:'contact',     type:'recommended', priority:'critical' },
+  { from:'pe-svc',      to:'contact',     type:'recommended', priority:'critical' },
+  { from:'vc-svc',      to:'contact',     type:'recommended', priority:'critical' },
+  // recommended high
+  { from:'cs-camino',   to:'startup-svc', type:'recommended', priority:'high' },
+  { from:'cs-goodhood', to:'startup-svc', type:'recommended', priority:'high' },
+  { from:'cs-orders',   to:'b2c-svc',     type:'recommended', priority:'high' },
+  { from:'cs-anzu',     to:'pe-svc',      type:'recommended', priority:'high' },
+  { from:'burn',        to:'startup-svc', type:'recommended', priority:'high' },
+  { from:'cac',         to:'startup-svc', type:'recommended', priority:'high' },
+  { from:'churn',       to:'b2c-svc',     type:'recommended', priority:'high' },
+  { from:'pod-startup', to:'startup-svc', type:'recommended', priority:'high' },
+  { from:'pod-hacks',   to:'startup-svc', type:'recommended', priority:'high' },
+  { from:'pod-pe',      to:'pe-svc',      type:'recommended', priority:'high' },
+  { from:'pm-pillar',   to:'cs-anzu',     type:'recommended', priority:'high' },
+  // recommended medium
+  { from:'saas-pillar', to:'pod-startup', type:'recommended', priority:'medium' },
+  { from:'saas-pillar', to:'pod-hacks',   type:'recommended', priority:'medium' },
+  { from:'pm-pillar',   to:'pod-pe',      type:'recommended', priority:'medium' },
+];
+
+// ── helpers ─────────────────────────────────────────────────────────────────
+const nodeById = Object.fromEntries(NODES.map(n => [n.id, n]));
+const CLUSTER_COLOR = { 1:'#3B82F6', 2:'#A855F7', 0:'#10B981' };
+
+function cc(c) { return CLUSTER_COLOR[c] || '#64748b'; }
+
+function nodeRadius(n) {
+  if (n.stage === 'Awareness')     return n.size * 1.05;
+  if (n.stage === 'Consideration') return n.size * 1.25;
+  return n.size * 1.55; // Decision diamond
+}
+
+function edgeColor(e) {
+  if (e.regression) return '#ef4444';
+  if (e.authority)  return '#64748b';
+  if (e.type === 'recommended') {
+    if (e.priority === 'critical') return '#f59e0b';
+    if (e.priority === 'high')     return '#22c55e';
+    return '#818cf8';
+  }
+  return '#334155';
+}
+
+// Bezier path between two nodes
+function buildPath(a, b, edge, curveOffset = 0) {
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  const ux = dx/len, uy = dy/len;
+  const sr = nodeRadius(a), tr = nodeRadius(b);
+  const sx = a.x + ux*sr, sy = a.y + uy*sr;
+  const ex = b.x - ux*tr, ey = b.y - uy*tr;
+  const mx = (sx+ex)/2, my = (sy+ey)/2;
+
+  if (edge.regression) {
+    // Arc dramatically below — regressions go right-to-left so we sweep below
+    const cpY = Math.max(sy, ey) + 110 + curveOffset * 30;
+    return `M ${sx} ${sy} Q ${mx} ${cpY} ${ex} ${ey}`;
+  }
+  if (edge.authority) {
+    // Arc above — authority links sweep over the top
+    const cpY = Math.min(sy, ey) - 70 - curveOffset * 20;
+    return `M ${sx} ${sy} Q ${mx} ${cpY} ${ex} ${ey}`;
+  }
+  // Forward: smooth cubic S-curve with spread for parallel edges
+  const perp = curveOffset * 22; // perpendicular spread
+  const cp1x = sx + (ex-sx)*0.38, cp1y = sy + perp;
+  const cp2x = sx + (ex-sx)*0.62, cp2y = ey + perp;
+  return `M ${sx} ${sy} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${ex} ${ey}`;
+}
+
+// ── components ──────────────────────────────────────────────────────────────
+function NodeShape({ node, dimmed, hovered }) {
+  const c = cc(node.cluster);
+  const r = node.size;
+  const opacity = dimmed ? 0.12 : 1;
+  const fillOpacity = hovered ? 0.3 : 0.12;
+  const strokeW = hovered ? 2.5 : node.primary ? 2.2 : 1.5;
+  const stroke = hovered ? '#f8fafc' : node.primary ? '#fbbf24' : c;
+  const fill = c;
+  const filter = hovered ? `url(#glow-${node.cluster || 0})` : undefined;
+  const props = { fill, fillOpacity, stroke, strokeWidth: strokeW, opacity, filter };
+
+  if (node.stage === 'Awareness') {
+    return <circle cx={node.x} cy={node.y} r={r} {...props} />;
+  }
+  if (node.stage === 'Consideration') {
+    const s = r * 1.7;
+    return <rect x={node.x-s/2} y={node.y-s/2} width={s} height={s} rx={4} {...props} />;
+  }
+  const d = r * 1.6;
+  const pts = `${node.x},${node.y-d} ${node.x+d},${node.y} ${node.x},${node.y+d} ${node.x-d},${node.y}`;
+  return <polygon points={pts} {...props} />;
+}
+
+function EdgePath({ edge, dimmed, curveOffset }) {
+  const a = nodeById[edge.from], b = nodeById[edge.to];
+  if (!a || !b) return null;
+  const d = buildPath(a, b, edge, curveOffset);
+  const color = edgeColor(edge);
+  const markId = edge.regression ? 'arr-reg'
+    : edge.authority ? 'arr-auth'
+    : edge.type === 'recommended' ? `arr-${edge.priority}`
+    : 'arr-exist';
+  const isDashed = edge.type === 'recommended';
+  const isAuth = edge.authority;
+  const dashArray = isDashed
+    ? (edge.priority === 'critical' ? '8 5' : '6 5')
+    : isAuth ? '3 5' : 'none';
+  const strokeW = isDashed && edge.priority === 'critical' ? 2.2 : 1.6;
+  const opacity = dimmed ? 0.05
+    : edge.regression ? 0.75
+    : isDashed ? 0.88
+    : isAuth ? 0.4
+    : 0.38;
+
+  return (
+    <path d={d} fill="none"
+      stroke={color} strokeWidth={strokeW}
+      strokeDasharray={dashArray === 'none' ? undefined : dashArray}
+      opacity={opacity}
+      markerEnd={`url(#${markId})`}
+    />
+  );
+}
+
+// Count parallel edges between same source/target group for spread
+function assignCurveOffsets(edges) {
+  const groups = {};
+  edges.forEach((e, i) => {
+    const key = [e.from, e.to, e.regression ? 'reg' : e.authority ? 'auth' : 'fwd'].join('|');
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(i);
+  });
+  const offsets = new Array(edges.length).fill(0);
+  Object.values(groups).forEach(idxs => {
+    const mid = (idxs.length - 1) / 2;
+    idxs.forEach((idx, pos) => { offsets[idx] = pos - mid; });
+  });
+  return offsets;
+}
+
+// Dot grid pattern background
+function DotGrid() {
+  return (
+    <defs>
+      <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+        <circle cx="1" cy="1" r="1" fill="#1e293b" />
+      </pattern>
+    </defs>
+  );
+}
+
+function App() {
+  const [tooltip, setTooltip] = React.useState(null);
+  const [hoveredCluster, setHoveredCluster] = React.useState(null);
+  const [hoveredNode, setHoveredNode] = React.useState(null);
+  const [showOnly, setShowOnly] = React.useState('all');
+
+  const filteredEdges = EDGES.filter(e => {
+    if (showOnly === 'existing')    return e.type === 'existing';
+    if (showOnly === 'recommended') return e.type === 'recommended';
+    if (showOnly === 'critical')    return e.type === 'recommended' && e.priority === 'critical';
+    return true;
+  });
+
+  const curveOffsets = React.useMemo(() => assignCurveOffsets(filteredEdges), [filteredEdges]);
+
+  function onNodeEnter(evt, node) {
+    const inLinks  = EDGES.filter(e => e.to   === node.id).length;
+    const outLinks = EDGES.filter(e => e.from === node.id).length;
+    setTooltip({ x: evt.clientX + 16, y: evt.clientY - 12, node, inLinks, outLinks });
+    setHoveredCluster(node.cluster);
+    setHoveredNode(node.id);
+  }
+  function onNodeLeave() {
+    setTooltip(null);
+    setHoveredCluster(null);
+    setHoveredNode(null);
+  }
+
+  const filters = [
+    { key:'all',         label:'All links',       cls:'active-all'   },
+    { key:'existing',    label:'Existing only',   cls:'active-exist'  },
+    { key:'recommended', label:'Recommended',     cls:'active-rec'   },
+    { key:'critical',    label:'🔴 Critical only', cls:'active-crit'  },
+  ];
+
+  const COLUMNS = [
+    { label:'AWARENESS',     x:22,  lineX:450  },
+    { label:'CONSIDERATION', x:458, lineX:745  },
+    { label:'DECISION',      x:752, lineX:1065 },
+    { label:'SHARED',        x:1072, lineX:null },
+  ];
+
+  const BANDS = [
+    { color:'#3B82F6', y:55,  h:410, label:'CLUSTER 1 — SaaS Growth Marketing',  ly:75  },
+    { color:'#A855F7', y:480, h:310, label:'CLUSTER 2 — Private Markets (PE / VC)', ly:500 },
+  ];
+
+  const MARKER_DEFS = [
+    { id:'arr-exist',    color:'#475569' },
+    { id:'arr-auth',     color:'#64748b' },
+    { id:'arr-reg',      color:'#ef4444' },
+    { id:'arr-critical', color:'#f59e0b' },
+    { id:'arr-high',     color:'#22c55e' },
+    { id:'arr-medium',   color:'#818cf8' },
+  ];
+
+  const GLOW_FILTERS = [
+    { id:'glow-1', color:'#3B82F6' },
+    { id:'glow-2', color:'#A855F7' },
+    { id:'glow-0', color:'#10B981' },
+  ];
+
+  const STATS = [
+    { color:'#ef4444', value:'8',  label:'Critical gaps',          sub:'Zero content inlinks to primary conversion targets' },
+    { color:'#f59e0b', value:'11', label:'High-priority links',     sub:'Orphaned pages + missing consideration → conversion paths' },
+    { color:'#f97316', value:'28', label:'Funnel regressions',      sub:'Conversion pages linking backward to case studies' },
+    { color:'#3B82F6', value:'23', label:'Total recommendations',   sub:'Clusters 1 + 2 (SaaS + PE/VC)' },
+  ];
+
+  return (
+    <div>
+      {/* ── Header ── */}
+      <div className="app-header">
+        <div>
+          <div className="header-eyebrow">Phase 5 · Internal Linking Engine</div>
+          <div className="header-title">Internal Linking Map</div>
+          <div className="header-sub">Azarian Growth Agency · Clusters 1 (SaaS) + 2 (PE/VC)</div>
+        </div>
+        <div className="filter-bar">
+          {filters.map(f => (
+            <button key={f.key}
+              className={`fbtn${showOnly === f.key ? ' ' + f.cls : ''}`}
+              onClick={() => setShowOnly(f.key)}>
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Map ── */}
+      <div className="map-wrap">
+        <div className="svg-container">
+          <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display:'block', minHeight:320 }}>
+
+            {/* Defs: dot grid, glow filters, arrowheads */}
+            <defs>
+              <DotGrid />
+              {GLOW_FILTERS.map(({ id, color }) => (
+                <filter key={id} id={id} x="-50%" y="-50%" width="200%" height="200%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor={color} floodOpacity="0.6" />
+                </filter>
+              ))}
+              {MARKER_DEFS.map(({ id, color }) => (
+                <marker key={id} id={id} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <polygon points="0 0, 8 4, 0 8" fill={color} opacity="0.85" />
+                </marker>
+              ))}
+            </defs>
+
+            {/* Background dot grid */}
+            <rect width={W} height={H} fill="url(#dots)" />
+
+            {/* Cluster bands */}
+            {BANDS.map(b => (
+              <g key={b.label}>
+                <rect x={10} y={b.y} width={W-20} height={b.h} rx={10}
+                  fill={b.color} fillOpacity={0.03}
+                  stroke={b.color} strokeOpacity={0.08} strokeWidth={1} />
+                <text x={24} y={b.ly} fontSize={10} fill={b.color} fillOpacity={0.55} fontWeight={700} letterSpacing={1.2}>
+                  {b.label}
+                </text>
+              </g>
+            ))}
+
+            {/* Column dividers + headers */}
+            {COLUMNS.map(col => (
+              <g key={col.label}>
+                <text x={col.x + 4} y={36} fontSize={9} fill="#1e3a5f" fontWeight={800} letterSpacing={1.8}>
+                  {col.label}
+                </text>
+                {col.lineX && (
+                  <line x1={col.lineX} y1={44} x2={col.lineX} y2={H-12}
+                    stroke="#1e293b" strokeWidth={1} strokeDasharray="4 6" />
+                )}
+              </g>
+            ))}
+
+            {/* Edges */}
+            {filteredEdges.map((edge, i) => {
+              const dimmed = hoveredCluster !== null
+                && nodeById[edge.from]?.cluster !== hoveredCluster
+                && nodeById[edge.to]?.cluster !== hoveredCluster;
+              return <EdgePath key={i} edge={edge} dimmed={dimmed} curveOffset={curveOffsets[i]} />;
+            })}
+
+            {/* Nodes */}
+            {NODES.map(node => {
+              const dimmed = hoveredCluster !== null && node.cluster !== hoveredCluster && node.id !== 'contact';
+              const hovered = hoveredNode === node.id;
+              const c = cc(node.cluster);
+              const labelY = node.y + nodeRadius(node) + 14;
+
+              return (
+                <g key={node.id} style={{ cursor:'pointer' }}
+                  onMouseEnter={e => onNodeEnter(e, node)}
+                  onMouseLeave={onNodeLeave}>
+                  <NodeShape node={node} dimmed={dimmed} hovered={hovered} />
+                  {node.primary && (
+                    <text x={node.x} y={node.y - nodeRadius(node) - 6}
+                      textAnchor="middle" fontSize={11} fill="#fbbf24" opacity={dimmed ? 0.1 : 1}>★</text>
+                  )}
+                  <text x={node.x} y={labelY}
+                    textAnchor="middle" fontSize={11} fill={dimmed ? '#1e293b' : '#94a3b8'}
+                    fontWeight={node.primary ? 600 : 400}
+                    style={{ pointerEvents:'none', userSelect:'none' }}>
+                    {node.label}
+                  </text>
+                </g>
+              );
+            })}
+
+            {/* Contact shared label */}
+            <text x={1190} y={330} textAnchor="middle" fontSize={9} fill="#10B981" fillOpacity={0.55} fontWeight={700} letterSpacing={1.2}>SHARED</text>
+          </svg>
+        </div>
+      </div>
+
+      {/* ── Legend ── */}
+      <div className="legend-section">
+        <div className="legend-row">
+          <span className="legend-group-label">Nodes</span>
+          {[
+            { shape:'circle',  color:'#3B82F6', label:'Awareness (Pillar / Supporting)' },
+            { shape:'square',  color:'#3B82F6', label:'Consideration (Case Studies)' },
+            { shape:'diamond', color:'#3B82F6', label:'Decision (Conversion page)' },
+            { shape:'star',    color:'#fbbf24', label:'★ Primary conversion target' },
+          ].map(item => (
+            <div className="legend-item" key={item.label}>
+              <svg width={16} height={16} style={{ flexShrink:0 }}>
+                {item.shape === 'circle'  && <circle cx={8} cy={8} r={5.5} fill="none" stroke={item.color} strokeWidth={1.5}/>}
+                {item.shape === 'square'  && <rect x={2.5} y={2.5} width={11} height={11} fill="none" stroke={item.color} strokeWidth={1.5}/>}
+                {item.shape === 'diamond' && <polygon points="8,1 15,8 8,15 1,8" fill="none" stroke={item.color} strokeWidth={1.5}/>}
+                {item.shape === 'star'    && <text x={2} y={13} fontSize={13} fill={item.color}>★</text>}
+              </svg>
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="legend-row">
+          <span className="legend-group-label">Links</span>
+          {[
+            { dash:'8 5', sw:2.2, color:'#f59e0b', label:'Recommended — Critical' },
+            { dash:'6 5', sw:1.6, color:'#22c55e', label:'Recommended — High' },
+            { dash:'6 5', sw:1.6, color:'#818cf8', label:'Recommended — Medium' },
+            { dash:null,  sw:1.6, color:'#ef4444', label:'Existing regression (backward funnel)' },
+            { dash:'3 5', sw:1.6, color:'#64748b', label:'Existing authority (reclassify)' },
+          ].map(item => (
+            <div className="legend-item" key={item.label}>
+              <svg width={30} height={12} style={{ flexShrink:0 }}>
+                <line x1={2} y1={6} x2={28} y2={6}
+                  stroke={item.color} strokeWidth={item.sw}
+                  strokeDasharray={item.dash || undefined} />
+              </svg>
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Stats ── */}
+      <div className="stats-grid">
+        {STATS.map(s => (
+          <div className="stat-card" key={s.label}>
+            <div className="stat-accent" style={{ background: s.color }} />
+            <div className="stat-value" style={{ color: s.color }}>{s.value}</div>
+            <div className="stat-label">{s.label}</div>
+            <div className="stat-sub">{s.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Tooltip ── */}
+      {tooltip && (
+        <div className="tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
+          <div className="t-title">{tooltip.node.label}</div>
+          <div className="t-url">{tooltip.node.url}</div>
+          <span className="badge" style={{ background:`${cc(tooltip.node.cluster)}20`, color:cc(tooltip.node.cluster) }}>
+            {tooltip.node.cluster === 0 ? 'Shared' : `Cluster ${tooltip.node.cluster}`}
+          </span>
+          <span className="badge" style={{ background:'#1e293b', color:'#94a3b8', border:'1px solid #334155' }}>
+            {tooltip.node.stage}
+          </span>
+          <span className="badge" style={{ background:'#1e293b', color:'#94a3b8', border:'1px solid #334155' }}>
+            {tooltip.node.role}
+          </span>
+          {tooltip.node.primary && (
+            <span className="badge" style={{ background:'#451a03', color:'#fbbf24' }}>★ Primary target</span>
+          )}
+          <div className="t-stats">
+            <div>Inlinks <span>{tooltip.inLinks}</span></div>
+            <div>Outlinks <span>{tooltip.outLinks}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
