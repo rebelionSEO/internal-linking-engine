@@ -8,295 +8,428 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
-    background: #020817;
-    color: #e2e8f0;
-    min-height: 100vh;
-  }
-  #root { width: 100%; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  background: #020817; color: #e2e8f0; min-height: 100vh;
+}
+#root { width: 100%; }
 
-  /* ── header ── */
-  .app-header {
-    padding: 20px 28px 16px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid #1e293b;
-    background: linear-gradient(180deg,#0d1b2e 0%,transparent 100%);
-  }
-  .header-eyebrow {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #3B82F6;
-    margin-bottom: 4px;
-  }
-  .header-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #f8fafc;
-    letter-spacing: -0.02em;
-  }
-  .header-sub {
-    font-size: 12px;
-    color: #64748b;
-    margin-top: 2px;
-  }
+.app-header {
+  padding: 18px 28px 14px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  border-bottom: 1px solid #1e293b;
+  background: linear-gradient(180deg, #0d1b2e 0%, transparent 100%);
+}
+.header-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #3B82F6; margin-bottom: 4px; }
+.header-title { font-size: 19px; font-weight: 800; color: #f8fafc; letter-spacing: -.02em; }
+.header-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
 
-  /* ── filter bar ── */
-  .filter-bar {
-    margin-left: auto;
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .fbtn {
-    padding: 6px 15px;
-    border-radius: 99px;
-    border: 1px solid #1e293b;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
-    background: #0f172a;
-    color: #64748b;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-  }
-  .fbtn:hover { border-color: #334155; color: #94a3b8; }
-  .fbtn.active-all   { background:#3B82F6; border-color:#3B82F6; color:#fff; }
-  .fbtn.active-exist { background:#475569; border-color:#475569; color:#fff; }
-  .fbtn.active-rec   { background:#22c55e; border-color:#22c55e; color:#000; }
-  .fbtn.active-crit  { background:#f59e0b; border-color:#f59e0b; color:#000; }
+/* cluster tabs */
+.cluster-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 28px 0; }
+.ctab {
+  padding: 7px 14px; border-radius: 99px; border: 1px solid #1e293b;
+  cursor: pointer; font-size: 12px; font-weight: 600; background: #0f172a; color: #64748b;
+  transition: all .15s; white-space: nowrap;
+}
+.ctab:hover { border-color: #334155; color: #94a3b8; }
+.ctab.active { color: #fff; border-color: transparent; }
 
-  /* ── map ── */
-  .map-wrap {
-    padding: 16px 28px 0;
-  }
-  .svg-container {
-    background: #040e1f;
-    border: 1px solid #1e293b;
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-  }
+/* filter pills */
+.filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 28px 0; align-items: center; }
+.filter-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #334155; margin-right: 4px; }
+.fpill {
+  padding: 4px 12px; border-radius: 99px; border: 1px solid #1e293b;
+  cursor: pointer; font-size: 11px; font-weight: 600; background: #0f172a; color: #64748b;
+  transition: all .15s;
+}
+.fpill:hover { border-color: #334155; color: #94a3b8; }
+.fpill.fa { background:#3B82F6; border-color:#3B82F6; color:#fff; }
+.fpill.fe { background:#475569; border-color:#475569; color:#fff; }
+.fpill.fr { background:#22c55e; border-color:#22c55e; color:#000; }
+.fpill.fc { background:#f59e0b; border-color:#f59e0b; color:#000; }
 
-  /* ── legend ── */
-  .legend-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 14px 28px;
-    border-top: 1px solid #1e293b;
-  }
-  .legend-row {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    font-size: 11px;
-  }
-  .legend-group-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #334155;
-    min-width: 44px;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #94a3b8;
-  }
+/* map */
+.map-wrap { padding: 12px 28px 0; }
+.svg-container { background: #040e1f; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; }
 
-  /* ── stats ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 12px;
-    padding: 16px 28px 28px;
-  }
-  .stat-card {
-    background: rgba(15,23,42,0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid #1e293b;
-    border-radius: 12px;
-    padding: 16px 18px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .stat-card:hover { border-color: #334155; }
-  .stat-accent {
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px; height: 100%;
-    border-radius: 12px 0 0 12px;
-  }
-  .stat-value {
-    font-size: 32px;
-    font-weight: 900;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.03em;
-  }
-  .stat-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #f1f5f9;
-    margin-top: 7px;
-  }
-  .stat-sub {
-    font-size: 11px;
-    color: #64748b;
-    margin-top: 4px;
-    line-height: 1.45;
-  }
+/* legend */
+.legend-section { display: flex; flex-direction: column; gap: 8px; padding: 12px 28px; border-top: 1px solid #1e293b; }
+.legend-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; font-size: 11px; }
+.legend-group { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #334155; min-width: 40px; }
+.legend-item { display: flex; align-items: center; gap: 6px; color: #94a3b8; }
 
-  /* ── tooltip ── */
-  .tooltip {
-    position: fixed;
-    pointer-events: none;
-    background: rgba(10,20,40,0.96);
-    backdrop-filter: blur(20px);
-    border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 13px 16px;
-    font-size: 12px;
-    max-width: 270px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
-    z-index: 200;
-    line-height: 1.6;
-  }
-  .t-title { font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 3px; }
-  .t-url { color: #475569; font-size: 10px; font-family: monospace; word-break: break-all; margin-bottom: 8px; }
-  .badge {
-    display: inline-flex; align-items: center;
-    padding: 2px 9px; border-radius: 99px;
-    font-size: 10px; font-weight: 600;
-    margin-right: 4px; margin-top: 3px;
-  }
-  .t-stats {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid #1e293b;
-    font-size: 11px;
-    color: #64748b;
-    display: flex;
-    gap: 12px;
-  }
-  .t-stats span { color: #94a3b8; font-weight: 600; }
+/* stats */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; padding: 12px 28px 24px; }
+.stat-card { background: rgba(15,23,42,.8); backdrop-filter: blur(12px); border: 1px solid #1e293b; border-radius: 12px; padding: 14px 16px; position: relative; overflow: hidden; }
+.stat-accent { position: absolute; top: 0; left: 0; width: 3px; height: 100%; border-radius: 12px 0 0 12px; }
+.stat-value { font-size: 28px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+.stat-label { font-size: 11px; font-weight: 700; color: #f1f5f9; margin-top: 5px; }
+.stat-sub { font-size: 10px; color: #64748b; margin-top: 3px; line-height: 1.4; }
+
+/* tooltip */
+.tooltip {
+  position: fixed; pointer-events: none;
+  background: rgba(10,20,40,.96); backdrop-filter: blur(20px);
+  border: 1px solid #334155; border-radius: 12px; padding: 12px 15px;
+  font-size: 12px; max-width: 260px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.7); z-index: 200; line-height: 1.6;
+}
+.t-title { font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 3px; }
+.t-url { color: #475569; font-size: 10px; font-family: monospace; word-break: break-all; margin-bottom: 7px; }
+.t-stats { margin-top: 7px; padding-top: 7px; border-top: 1px solid #1e293b; font-size: 11px; color: #64748b; display: flex; gap: 12px; }
+.t-stats span { color: #94a3b8; font-weight: 600; }
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 600; margin-right: 3px; margin-top: 3px; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 
-const W = 1380, H = 810;
+const W = 1380, H = 720;
 
-// ── data ───────────────────────────────────────────────────────────────────
-const NODES = [
-  // CLUSTER 1 — SaaS (blue) ─────────────────────────────────
-  { id:'saas-pillar',  label:'SaaS Hub',             url:'/industries/saas/',                                        cluster:1, stage:'Awareness',     role:'Pillar',     x:172, y:190, size:28 },
-  { id:'burn',         label:'Burn Rate Calc',        url:'/marketing-tools/burn-rate-calculator/',                   cluster:1, stage:'Awareness',     role:'Supporting', x:65,  y:300, size:15 },
-  { id:'cac',          label:'CAC Calc',              url:'/marketing-tools/cac-calculator/',                         cluster:1, stage:'Awareness',     role:'Supporting', x:172, y:330, size:15 },
-  { id:'churn',        label:'Churn Rate Calc',       url:'/marketing-tools/churn-rate-calculator/',                  cluster:1, stage:'Awareness',     role:'Supporting', x:65,  y:370, size:13 },
-  { id:'retention',    label:'Retention Calc',        url:'/marketing-tools/retention-rate-calculator/',              cluster:1, stage:'Awareness',     role:'Supporting', x:172, y:400, size:12 },
-  { id:'pod-startup',  label:'Podcast: Grow Startup', url:'/featured-podcasts/how-to-effectively-grow-a-startup/',   cluster:1, stage:'Awareness',     role:'Supporting', x:315, y:245, size:15 },
-  { id:'pod-hacks',    label:'Podcast: Growth Hacks', url:'/featured-podcasts/growth-hacks-to-effectively-and-efficiently-grow-a-startup/', cluster:1, stage:'Awareness', role:'Supporting', x:315, y:310, size:13 },
-  // Consideration
-  { id:'cs-camino',    label:'Case Study: Camino',    url:'/case-studies/camino-financial/',                          cluster:1, stage:'Consideration', role:'Supporting', x:570, y:118, size:16 },
-  { id:'cs-goodhood',  label:'Case Study: Goodhood',  url:'/case-studies/goodhood/',                                  cluster:1, stage:'Consideration', role:'Supporting', x:570, y:215, size:15 },
-  { id:'cs-orders',    label:'Case Study: Orders.co', url:'/case-studies/orders-co/',                                 cluster:1, stage:'Consideration', role:'Supporting', x:570, y:308, size:15 },
-  // Decision
-  { id:'startup-svc',  label:'Startup Marketing',     url:'/industries/saas/startup-marketing-agency/',              cluster:1, stage:'Decision',       role:'Conversion', x:900, y:112, size:24, primary:true },
-  { id:'b2c-svc',      label:'B2C Marketing',         url:'/industries/saas/b2c-marketing-agency/',                  cluster:1, stage:'Decision',       role:'Conversion', x:900, y:215, size:22, primary:true },
-  { id:'b2b-svc',      label:'B2B SaaS Marketing',    url:'/industries/saas/b2b-marketing-agency/',                  cluster:1, stage:'Decision',       role:'Conversion', x:900, y:313, size:17 },
-  { id:'ent-svc',      label:'Enterprise SaaS',       url:'/industries/saas/enterprise-digital-marketing-agency/',   cluster:1, stage:'Decision',       role:'Conversion', x:900, y:400, size:15 },
+// ── CLUSTER DEFINITIONS ──────────────────────────────────────────────────────
+const CLUSTER_META = {
+  1: { name: 'SaaS Growth Marketing',   color: '#3B82F6' },
+  2: { name: 'Private Markets (PE/VC)', color: '#A855F7' },
+  3: { name: 'Webinars',                color: '#06B6D4' },
+  4: { name: 'Marketing Tools',         color: '#F59E0B' },
+  5: { name: 'Home Services',           color: '#10B981' },
+  6: { name: 'E-Commerce',              color: '#F97316' },
+};
 
-  // CLUSTER 2 — PE/VC (purple) ──────────────────────────────
-  { id:'pm-pillar',    label:'Private Markets Hub',   url:'/industries/private-markets/',                             cluster:2, stage:'Awareness',     role:'Pillar',     x:172, y:568, size:24 },
-  { id:'pod-pe',       label:'Podcast: Early Startups',url:'/featured-podcasts/supporting-early-stage-startups-in-armenia-and-the-united-states/', cluster:2, stage:'Awareness', role:'Supporting', x:315, y:643, size:13 },
-  // Consideration
-  { id:'cs-anzu',      label:'Case Study: Anzu Global',url:'/case-studies/anzu-global/',                             cluster:2, stage:'Consideration', role:'Supporting', x:570, y:588, size:15 },
-  // Decision
-  { id:'pe-svc',       label:'PE Firms',              url:'/industries/private-markets/private-equity-firms/',        cluster:2, stage:'Decision',       role:'Conversion', x:900, y:533, size:22, primary:true },
-  { id:'vc-svc',       label:'VC Firms',              url:'/industries/private-markets/venture-capital-firms/',       cluster:2, stage:'Decision',       role:'Conversion', x:900, y:644, size:20 },
+// shared contact node (same coords in every cluster view)
+const CONTACT = { id:'contact', label:'Contact Us', url:'/contact-us/', cluster:0, stage:'Decision', role:'Conversion', x:1190, y:360, size:24 };
 
-  // SHARED
-  { id:'contact',      label:'Contact Us',            url:'/contact-us/',                                             cluster:0, stage:'Decision',       role:'Conversion', x:1190, y:377, size:26 },
-];
+// ── ALL NODES ────────────────────────────────────────────────────────────────
+const ALL_NODES = {
 
-const EDGES = [
-  // existing regressions — conversion → case studies (backward)
-  { from:'startup-svc', to:'cs-camino',   type:'existing', regression:true },
-  { from:'startup-svc', to:'cs-goodhood', type:'existing', regression:true },
-  { from:'startup-svc', to:'cs-orders',   type:'existing', regression:true },
-  { from:'b2c-svc',     to:'cs-camino',   type:'existing', regression:true },
-  { from:'b2c-svc',     to:'cs-goodhood', type:'existing', regression:true },
-  { from:'b2c-svc',     to:'cs-orders',   type:'existing', regression:true },
-  // existing authority — case studies → saas pillar
-  { from:'cs-camino',   to:'saas-pillar', type:'existing', authority:true },
-  { from:'cs-goodhood', to:'saas-pillar', type:'existing', authority:true },
-  { from:'cs-orders',   to:'saas-pillar', type:'existing', authority:true },
-  { from:'cs-anzu',     to:'saas-pillar', type:'existing', authority:true },
-  // recommended critical
-  { from:'saas-pillar', to:'startup-svc', type:'recommended', priority:'critical' },
-  { from:'saas-pillar', to:'b2c-svc',     type:'recommended', priority:'critical' },
-  { from:'pm-pillar',   to:'pe-svc',      type:'recommended', priority:'critical' },
-  { from:'pm-pillar',   to:'vc-svc',      type:'recommended', priority:'critical' },
-  { from:'startup-svc', to:'contact',     type:'recommended', priority:'critical' },
-  { from:'b2c-svc',     to:'contact',     type:'recommended', priority:'critical' },
-  { from:'pe-svc',      to:'contact',     type:'recommended', priority:'critical' },
-  { from:'vc-svc',      to:'contact',     type:'recommended', priority:'critical' },
-  // recommended high
-  { from:'cs-camino',   to:'startup-svc', type:'recommended', priority:'high' },
-  { from:'cs-goodhood', to:'startup-svc', type:'recommended', priority:'high' },
-  { from:'cs-orders',   to:'b2c-svc',     type:'recommended', priority:'high' },
-  { from:'cs-anzu',     to:'pe-svc',      type:'recommended', priority:'high' },
-  { from:'burn',        to:'startup-svc', type:'recommended', priority:'high' },
-  { from:'cac',         to:'startup-svc', type:'recommended', priority:'high' },
-  { from:'churn',       to:'b2c-svc',     type:'recommended', priority:'high' },
-  { from:'pod-startup', to:'startup-svc', type:'recommended', priority:'high' },
-  { from:'pod-hacks',   to:'startup-svc', type:'recommended', priority:'high' },
-  { from:'pod-pe',      to:'pe-svc',      type:'recommended', priority:'high' },
-  { from:'pm-pillar',   to:'cs-anzu',     type:'recommended', priority:'high' },
-  // recommended medium
-  { from:'saas-pillar', to:'pod-startup', type:'recommended', priority:'medium' },
-  { from:'saas-pillar', to:'pod-hacks',   type:'recommended', priority:'medium' },
-  { from:'pm-pillar',   to:'pod-pe',      type:'recommended', priority:'medium' },
-];
+  // ── CLUSTER 1: SaaS ───────────────────────────────────────────────────────
+  1: [
+    { id:'saas-pillar',   label:'SaaS Hub',             url:'/industries/saas/',                                      cluster:1, stage:'Awareness',     role:'Pillar',     x:172, y:190, size:26 },
+    { id:'burn',          label:'Burn Rate Calc',        url:'/marketing-tools/burn-rate-calculator/',                 cluster:1, stage:'Awareness',     role:'Supporting', x:65,  y:300, size:14 },
+    { id:'cac',           label:'CAC Calc',              url:'/marketing-tools/cac-calculator/',                       cluster:1, stage:'Awareness',     role:'Supporting', x:172, y:330, size:14 },
+    { id:'churn',         label:'Churn Rate Calc',       url:'/marketing-tools/churn-rate-calculator/',                cluster:1, stage:'Awareness',     role:'Supporting', x:65,  y:370, size:12 },
+    { id:'retention',     label:'Retention Calc',        url:'/marketing-tools/retention-rate-calculator/',            cluster:1, stage:'Awareness',     role:'Supporting', x:172, y:400, size:11 },
+    { id:'pod-startup',   label:'Podcast: Grow Startup', url:'/featured-podcasts/how-to-effectively-grow-a-startup/', cluster:1, stage:'Awareness',     role:'Supporting', x:315, y:245, size:14 },
+    { id:'pod-hacks',     label:'Podcast: Growth Hacks', url:'/featured-podcasts/growth-hacks-to-efficiently-grow-a-startup/', cluster:1, stage:'Awareness', role:'Supporting', x:315, y:310, size:12 },
+    { id:'cs-camino',     label:'Case Study: Camino',    url:'/case-studies/camino-financial/',                        cluster:1, stage:'Consideration', role:'Supporting', x:570, y:118, size:15 },
+    { id:'cs-goodhood',   label:'Case Study: Goodhood',  url:'/case-studies/goodhood/',                                cluster:1, stage:'Consideration', role:'Supporting', x:570, y:215, size:14 },
+    { id:'cs-orders',     label:'Case Study: Orders.co', url:'/case-studies/orders-co/',                               cluster:1, stage:'Consideration', role:'Supporting', x:570, y:308, size:14 },
+    { id:'startup-svc',   label:'Startup Marketing',     url:'/industries/saas/startup-marketing-agency/',            cluster:1, stage:'Decision',       role:'Conversion', x:900, y:112, size:23, primary:true },
+    { id:'b2c-svc',       label:'B2C Marketing',         url:'/industries/saas/b2c-marketing-agency/',                cluster:1, stage:'Decision',       role:'Conversion', x:900, y:215, size:21, primary:true },
+    { id:'b2b-svc',       label:'B2B SaaS Marketing',    url:'/industries/saas/b2b-marketing-agency/',                cluster:1, stage:'Decision',       role:'Conversion', x:900, y:313, size:16 },
+    { id:'ent-svc',       label:'Enterprise SaaS',       url:'/industries/saas/enterprise-digital-marketing-agency/', cluster:1, stage:'Decision',       role:'Conversion', x:900, y:400, size:14 },
+    CONTACT,
+  ],
 
-// ── helpers ─────────────────────────────────────────────────────────────────
-const nodeById = Object.fromEntries(NODES.map(n => [n.id, n]));
-const CLUSTER_COLOR = { 1:'#3B82F6', 2:'#A855F7', 0:'#10B981' };
+  // ── CLUSTER 2: PE/VC ──────────────────────────────────────────────────────
+  2: [
+    { id:'pm-pillar',     label:'Private Markets Hub',    url:'/industries/private-markets/',                          cluster:2, stage:'Awareness',     role:'Pillar',     x:172, y:360, size:23 },
+    { id:'pod-pe',        label:'Podcast: Early Startups',url:'/featured-podcasts/supporting-early-stage-startups-in-armenia/', cluster:2, stage:'Awareness', role:'Supporting', x:315, y:430, size:12 },
+    { id:'pe-blog',       label:'PE Marketing Strategies',url:'/private-equity-marketing-strategies/',                 cluster:2, stage:'Awareness',     role:'Supporting', x:315, y:250, size:12 },
+    { id:'pe-fund-mktg',  label:'PE Fund Marketing',      url:'/private-equity-fund-marketing/',                       cluster:2, stage:'Awareness',     role:'Supporting', x:315, y:320, size:12 },
+    { id:'pe-branding',   label:'PE Branding',            url:'/private-equity-branding/',                             cluster:2, stage:'Awareness',     role:'Supporting', x:180, y:490, size:11 },
+    { id:'vc-list',       label:'Seed VC List (900+)',     url:'/list-of-900-seed-a-and-seed-stage-vcs-in-the-usa/',   cluster:2, stage:'Consideration', role:'Supporting', x:570, y:250, size:14 },
+    { id:'pe-vs-vc',      label:'PE vs VC Guide',          url:'/private-equity-vs-venture-capital/',                  cluster:2, stage:'Consideration', role:'Supporting', x:570, y:340, size:13 },
+    { id:'cs-anzu',       label:'Case Study: Anzu Global', url:'/case-studies/anzu-global/',                           cluster:2, stage:'Consideration', role:'Supporting', x:570, y:430, size:14 },
+    { id:'pe-svc',        label:'PE Firms',                url:'/industries/private-markets/private-equity-firms/',    cluster:2, stage:'Decision',       role:'Conversion', x:900, y:290, size:21, primary:true },
+    { id:'vc-svc',        label:'VC Firms',                url:'/industries/private-markets/venture-capital-firms/',   cluster:2, stage:'Decision',       role:'Conversion', x:900, y:430, size:19 },
+    CONTACT,
+  ],
 
-function cc(c) { return CLUSTER_COLOR[c] || '#64748b'; }
+  // ── CLUSTER 3: Webinars ───────────────────────────────────────────────────
+  3: [
+    { id:'web-hub',       label:'Webinar Hub',              url:'/webinars/',                                                    cluster:3, stage:'Awareness',     role:'Pillar',     x:172, y:360, size:25 },
+    { id:'web-vibe',      label:'Vibe Marketing (SF)',       url:'/webinars/vibe-marketing-webinar/',                             cluster:3, stage:'Consideration', role:'Supporting', x:520, y:80,  size:14 },
+    { id:'web-self-pub',  label:'Self-Publishing Engine',    url:'/webinars/building-self-publishing-content-engine/',            cluster:3, stage:'Consideration', role:'Supporting', x:520, y:163, size:13 },
+    { id:'web-email',     label:'Advanced Email AI',         url:'/webinars/advanced-email-marketing/',                          cluster:3, stage:'Consideration', role:'Supporting', x:520, y:246, size:13 },
+    { id:'web-ai-search', label:'AI & Search Tech',          url:'/webinars/webinar-ai-and-advanced-search-technologies/',       cluster:3, stage:'Consideration', role:'Supporting', x:520, y:329, size:13 },
+    { id:'web-content-ai',label:'Content Mktg AI Era',       url:'/webinars/content-marketing-in-the-ai-era/',                  cluster:3, stage:'Consideration', role:'Supporting', x:520, y:412, size:13 },
+    { id:'web-geo',       label:'GEO is the New SEO',        url:'/webinars/generative-engine-optimization-webinar/',            cluster:3, stage:'Consideration', role:'Supporting', x:520, y:495, size:12 },
+    { id:'web-agentic',   label:'Agentic AI (Free)',         url:'/webinars/agentic-ai-webinar/',                                cluster:3, stage:'Consideration', role:'Supporting', x:520, y:578, size:12 },
+    { id:'web-state-ai',  label:'State of AI for Growth',    url:'/webinars/state-of-ai-for-growth/',                            cluster:3, stage:'Consideration', role:'Supporting', x:680, y:120, size:12 },
+    { id:'web-gads',      label:'Google Ads AI Tips',        url:'/webinars/google-advertises-advanced-campaign-structures/',    cluster:3, stage:'Consideration', role:'Supporting', x:680, y:203, size:12 },
+    { id:'web-tracking',  label:'Server-Side Tracking',      url:'/webinars/how-server-side-tracking-can-improve-attribution-and-site-speed/', cluster:3, stage:'Consideration', role:'Supporting', x:680, y:286, size:12 },
+    { id:'web-gen-ai',    label:'Generative AI Work',        url:'/webinars/how-is-generative-ai-shaping-the-way-we-work-and-create/', cluster:3, stage:'Consideration', role:'Supporting', x:680, y:369, size:11 },
+    { id:'web-meta',      label:'Master Meta Marketing',     url:'/webinars/master-the-art-of-meta-marketing/',                 cluster:3, stage:'Consideration', role:'Supporting', x:680, y:452, size:11 },
+    { id:'web-signal',    label:'Signal-Based Outreach',     url:'/webinars/signal-based-outreach-webinar/',                    cluster:3, stage:'Consideration', role:'Supporting', x:680, y:535, size:11 },
+    { id:'web-agentic2',  label:'Agentic AI in Action (NY)', url:'/webinars/agentic-ai-in-action/',                             cluster:3, stage:'Consideration', role:'Supporting', x:680, y:618, size:11 },
+    // blog posts that SHOULD link in (shown as external/faded gap indicators)
+    { id:'web-blog1',     label:'Webinar Strategy Guide',    url:'/webinar-marketing-strategy-guide/',                           cluster:3, stage:'Awareness',     role:'Supporting', x:60,  y:200, size:11, external:true },
+    { id:'web-blog2',     label:'Webinar Marketing Plan',    url:'/webinar-marketing-plan/',                                     cluster:3, stage:'Awareness',     role:'Supporting', x:60,  y:280, size:11, external:true },
+    { id:'web-blog3',     label:'Webinar Best Practices',    url:'/webinar-marketing-best-practices/',                           cluster:3, stage:'Awareness',     role:'Supporting', x:60,  y:360, size:11, external:true },
+    CONTACT,
+  ],
 
+  // ── CLUSTER 4: Marketing Tools ────────────────────────────────────────────
+  4: [
+    { id:'tools-hub',     label:'Tools Hub',               url:'/marketing-tools/',                                     cluster:4, stage:'Awareness',     role:'Pillar',     x:205, y:100, size:25 },
+    { id:'calcs-dupe',    label:'/calculators/ (duplicate)',url:'/calculators/',                                         cluster:4, stage:'Awareness',     role:'Dead Weight', x:205, y:640, size:13, deadWeight:true },
+    // SaaS-focused calcs (left col)
+    { id:'t-burn',        label:'Burn Rate',                url:'/marketing-tools/burn-rate-calculator/',                cluster:4, stage:'Awareness',     role:'Supporting', x:70,  y:240, size:14 },
+    { id:'t-cac',         label:'CAC Calculator',           url:'/marketing-tools/cac-calculator/',                      cluster:4, stage:'Awareness',     role:'Supporting', x:70,  y:320, size:14 },
+    { id:'t-churn',       label:'Churn Rate',               url:'/marketing-tools/churn-rate-calculator/',               cluster:4, stage:'Awareness',     role:'Supporting', x:70,  y:400, size:14 },
+    { id:'t-retention',   label:'Retention Rate',           url:'/marketing-tools/retention-rate-calculator/',           cluster:4, stage:'Awareness',     role:'Supporting', x:70,  y:480, size:13 },
+    // General calcs (center col)
+    { id:'t-roi',         label:'ROI Calculator',           url:'/marketing-tools/roi-calculator/',                      cluster:4, stage:'Awareness',     role:'Supporting', x:205, y:260, size:14 },
+    { id:'t-cro',         label:'CRO Calculator',           url:'/marketing-tools/cro-calculator/',                      cluster:4, stage:'Awareness',     role:'Supporting', x:205, y:340, size:14 },
+    { id:'t-ctr',         label:'CTR Calculator',           url:'/marketing-tools/ctr-calculator/',                      cluster:4, stage:'Awareness',     role:'Supporting', x:205, y:420, size:13 },
+    { id:'t-instagram',   label:'Instagram Eng. Rate',      url:'/marketing-tools/instagram-engagement-rate-calculator/',cluster:4, stage:'Awareness',     role:'Supporting', x:205, y:500, size:12 },
+    // PPC/Ecom calcs (right col)
+    { id:'t-roas',        label:'ROAS Calculator',          url:'/marketing-tools/roas-calculator/',                     cluster:4, stage:'Awareness',     role:'Supporting', x:340, y:240, size:14 },
+    { id:'t-cpc',         label:'CPC Calculator',           url:'/marketing-tools/cpc-calculator/',                      cluster:4, stage:'Awareness',     role:'Supporting', x:340, y:320, size:14 },
+    { id:'t-ppc',         label:'PPC Calculator',           url:'/marketing-tools/ppc-calculator/',                      cluster:4, stage:'Awareness',     role:'Supporting', x:340, y:400, size:14 },
+    { id:'t-cpm',         label:'CPM Calculator',           url:'/marketing-tools/cpm-calculator/',                      cluster:4, stage:'Awareness',     role:'Supporting', x:340, y:480, size:13 },
+    // Cross-cluster conversion targets (external, faded)
+    { id:'cx-startup',    label:'Startup Marketing Svc',    url:'/industries/saas/startup-marketing-agency/',            cluster:4, stage:'Decision',       role:'Conversion', x:900, y:180, size:18, external:true, primary:true },
+    { id:'cx-b2c',        label:'B2C Marketing Svc',        url:'/industries/saas/b2c-marketing-agency/',                cluster:4, stage:'Decision',       role:'Conversion', x:900, y:290, size:17, external:true },
+    { id:'cx-amazon',     label:'Amazon Ads Agency',         url:'/services/amazon-ads-agency/',                          cluster:4, stage:'Decision',       role:'Conversion', x:900, y:400, size:17, external:true },
+    { id:'cx-ppc',        label:'PPC / Paid Search Svc',    url:'/services/paid-search-marketing/',                      cluster:4, stage:'Decision',       role:'Conversion', x:900, y:510, size:15, external:true },
+    CONTACT,
+  ],
+
+  // ── CLUSTER 5: Home Services ──────────────────────────────────────────────
+  5: [
+    // Decision — hub IS the service page
+    { id:'hs-hub',        label:'Home Services Hub',        url:'/industries/home-services/',                            cluster:5, stage:'Decision',       role:'Conversion', x:900, y:350, size:24, primary:true },
+    // Case study (Consideration)
+    { id:'hs-casestudy',  label:'Case Study: Mobile Repair',url:'/mobile-auto-repair-marketing-case-study/',             cluster:5, stage:'Consideration', role:'Supporting', x:700, y:230, size:13 },
+    // Consideration pages
+    { id:'hs-criteria',   label:'Choose Home Svc Agency',   url:'/criteria-to-choose-home-service-marketing-agency/',   cluster:5, stage:'Consideration', role:'Supporting', x:560, y:130, size:13 },
+    { id:'hs-why-hvac',   label:'Why HVAC Digital Mktg',    url:'/why-you-need-an-hvac-digital-marketing-agency/',       cluster:5, stage:'Consideration', role:'Supporting', x:560, y:215, size:13 },
+    { id:'hs-strategies', label:'HS Marketing Strategies',  url:'/home-service-marketing-strategies/',                   cluster:5, stage:'Consideration', role:'Supporting', x:560, y:300, size:13 },
+    { id:'hs-ads-guide',  label:'Home Service Ads Guide',   url:'/home-service-ads-guide/',                              cluster:5, stage:'Consideration', role:'Supporting', x:560, y:385, size:13 },
+    { id:'hs-local-seo',  label:'Local SEO for HS',         url:'/local-seo-for-home-services/',                         cluster:5, stage:'Consideration', role:'Supporting', x:560, y:470, size:12 },
+    { id:'hs-email',      label:'HS Email Marketing',       url:'/home-services-email-marketing/',                       cluster:5, stage:'Consideration', role:'Supporting', x:560, y:555, size:12 },
+    // Awareness pages (col 1)
+    { id:'hs-hvac-seo',   label:'HVAC SEO',                 url:'/hvac-seo/',                                            cluster:5, stage:'Awareness',     role:'Supporting', x:85,  y:110, size:14 },
+    { id:'hs-pest',       label:'Pest Control Mktg',        url:'/pest-control-marketing-ideas/',                        cluster:5, stage:'Awareness',     role:'Supporting', x:85,  y:195, size:13 },
+    { id:'hs-water',      label:'Water Damage Mktg',        url:'/water-damage-marketing-strategies/',                   cluster:5, stage:'Awareness',     role:'Supporting', x:85,  y:280, size:13 },
+    { id:'hs-hvac-mktg',  label:'HVAC Marketing Plan',      url:'/hvac-marketing/',                                      cluster:5, stage:'Awareness',     role:'Supporting', x:85,  y:365, size:13 },
+    { id:'hs-roofing-seo',label:'Roofing SEO Agency',       url:'/roofing-seo-agency-guide/',                            cluster:5, stage:'Awareness',     role:'Supporting', x:85,  y:450, size:12 },
+    { id:'hs-roofing-ads',label:'Roofing Ads',              url:'/roofing-ads/',                                         cluster:5, stage:'Awareness',     role:'Supporting', x:85,  y:535, size:12 },
+    // Awareness pages (col 2)
+    { id:'hs-soc-mktg',   label:'HS Social Media',          url:'/home-services-social-media-marketing/',                cluster:5, stage:'Awareness',     role:'Supporting', x:245, y:145, size:13 },
+    { id:'hs-google-ads', label:'Google Ads for HS',        url:'/google-ads-for-home-services/',                        cluster:5, stage:'Awareness',     role:'Supporting', x:245, y:228, size:12 },
+    { id:'hs-fb-ads',     label:'Facebook Ads for HS',      url:'/facebook-ads-for-home-services/',                      cluster:5, stage:'Awareness',     role:'Supporting', x:245, y:311, size:12 },
+    { id:'hs-ppc',        label:'PPC for HS Hacks',         url:'/ppc-for-home-services-hacks/',                         cluster:5, stage:'Awareness',     role:'Supporting', x:245, y:394, size:12 },
+    { id:'hs-content',    label:'Content Mktg HS',          url:'/content-marketing-home-services/',                     cluster:5, stage:'Awareness',     role:'Supporting', x:245, y:477, size:11 },
+    { id:'hs-plumbing',   label:'Plumbing Mktg',            url:'/plumbing-business-marketing/',                         cluster:5, stage:'Awareness',     role:'Supporting', x:245, y:560, size:11 },
+    CONTACT,
+  ],
+
+  // ── CLUSTER 6: E-Commerce ─────────────────────────────────────────────────
+  6: [
+    // Pillar hub
+    { id:'ec-hub',        label:'E-Com Hub',                url:'/industries/e-commerce/',                               cluster:6, stage:'Awareness',     role:'Pillar',     x:172, y:350, size:22 },
+    // Decision pages
+    { id:'ec-amazon-svc', label:'Amazon Ads Agency',         url:'/services/amazon-ads-agency/',                          cluster:6, stage:'Decision',       role:'Conversion', x:900, y:200, size:24, primary:true },
+    { id:'ec-fashion-svc',label:'Fashion Digital Agency',    url:'/industries/e-commerce/fashion-digital-marketing-agency/', cluster:6, stage:'Decision', role:'Conversion', x:900, y:450, size:20, primary:true },
+    // Case study — Consideration bridge
+    { id:'ec-casestudy',  label:'Case Study: 130% Amazon',  url:'/ecommerce-marketing-case-study/',                      cluster:6, stage:'Consideration', role:'Supporting', x:680, y:200, size:14 },
+    // Amazon sub-cluster (Consideration)
+    { id:'ec-amz-ai',     label:'Amazon Ads AI Playbook',    url:'/amazon-ads-ai-shopping-assistants-playbook/',          cluster:6, stage:'Consideration', role:'Supporting', x:530, y:100, size:13 },
+    { id:'ec-amz-mgmt',   label:'Amazon Ads Management',     url:'/amazon-ads-management/',                               cluster:6, stage:'Consideration', role:'Supporting', x:530, y:180, size:13 },
+    { id:'ec-amz-srch',   label:'Amazon Search Mktg',        url:'/amazon-search-engine-marketing-strategies/',           cluster:6, stage:'Awareness',     role:'Supporting', x:320, y:120, size:12 },
+    { id:'ec-amz-first',  label:'First Amazon Ad Campaign',  url:'/first-amazon-ad-campaign/',                            cluster:6, stage:'Awareness',     role:'Supporting', x:320, y:200, size:12 },
+    { id:'ec-amz-master', label:'Mastering Amazon Ads',      url:'/mastering-amazon-sponsored-ads/',                      cluster:6, stage:'Awareness',     role:'Supporting', x:320, y:280, size:12 },
+    // Fashion sub-cluster
+    { id:'ec-fashion-ug', label:'Fashion E-Com Guide',       url:'/fashion-ecommerce-ultimate-guide/',                    cluster:6, stage:'Consideration', role:'Supporting', x:530, y:460, size:13 },
+    { id:'ec-fashion-seo',label:'Fashion SEO',               url:'/fashion-seo-guide/',                                   cluster:6, stage:'Awareness',     role:'Supporting', x:320, y:440, size:12 },
+    { id:'ec-fashion-mkt',label:'Fashion Mktg Trends',       url:'/fashion-marketing-trends/',                            cluster:6, stage:'Awareness',     role:'Supporting', x:320, y:520, size:12 },
+    // General E-Com
+    { id:'ec-seo',        label:'E-Com SEO Guide',           url:'/e-commerce-seo-boost-your-online-stores-visibility/',  cluster:6, stage:'Awareness',     role:'Supporting', x:80,  y:200, size:14 },
+    { id:'ec-content',    label:'E-Com Content Strategy',    url:'/ecommerce-content-strategy/',                          cluster:6, stage:'Awareness',     role:'Supporting', x:80,  y:280, size:13 },
+    { id:'ec-ppc',        label:'PPC for E-Commerce',        url:'/ppc-for-ecommerce/',                                   cluster:6, stage:'Consideration', role:'Supporting', x:80,  y:360, size:13 },
+    { id:'ec-cro',        label:'E-Com CRO Tips',            url:'/ecommerce-cro-tips/',                                  cluster:6, stage:'Consideration', role:'Supporting', x:80,  y:440, size:13 },
+    { id:'ec-geo',        label:'GEO for E-Commerce',        url:'/geo-for-ecommerce/',                                   cluster:6, stage:'Consideration', role:'Supporting', x:530, y:540, size:12 },
+    { id:'ec-dtc',        label:'DTC Brand + AI Discovery',  url:'/dtc-brand-authority-ai-discoverable-ecommerce/',       cluster:6, stage:'Consideration', role:'Supporting', x:530, y:620, size:12 },
+    CONTACT,
+  ],
+};
+
+// ── ALL EDGES ─────────────────────────────────────────────────────────────────
+const ALL_EDGES = {
+
+  1: [
+    // existing regressions
+    { from:'startup-svc', to:'cs-camino',   type:'existing', regression:true },
+    { from:'startup-svc', to:'cs-goodhood', type:'existing', regression:true },
+    { from:'startup-svc', to:'cs-orders',   type:'existing', regression:true },
+    { from:'b2c-svc',     to:'cs-camino',   type:'existing', regression:true },
+    { from:'b2c-svc',     to:'cs-goodhood', type:'existing', regression:true },
+    { from:'b2c-svc',     to:'cs-orders',   type:'existing', regression:true },
+    // existing authority
+    { from:'cs-camino',   to:'saas-pillar', type:'existing', authority:true },
+    { from:'cs-goodhood', to:'saas-pillar', type:'existing', authority:true },
+    { from:'cs-orders',   to:'saas-pillar', type:'existing', authority:true },
+    // recommended critical — pillar → conversion
+    { from:'saas-pillar', to:'startup-svc', type:'recommended', priority:'critical' },
+    { from:'saas-pillar', to:'b2c-svc',     type:'recommended', priority:'critical' },
+    { from:'startup-svc', to:'contact',     type:'recommended', priority:'critical' },
+    { from:'b2c-svc',     to:'contact',     type:'recommended', priority:'critical' },
+    // recommended high — case studies → conversion
+    { from:'cs-camino',   to:'startup-svc', type:'recommended', priority:'high' },
+    { from:'cs-goodhood', to:'startup-svc', type:'recommended', priority:'high' },
+    { from:'cs-orders',   to:'b2c-svc',     type:'recommended', priority:'high' },
+    { from:'burn',        to:'startup-svc', type:'recommended', priority:'high' },
+    { from:'cac',         to:'startup-svc', type:'recommended', priority:'high' },
+    { from:'churn',       to:'b2c-svc',     type:'recommended', priority:'high' },
+    { from:'pod-startup', to:'startup-svc', type:'recommended', priority:'high' },
+    { from:'pod-hacks',   to:'startup-svc', type:'recommended', priority:'high' },
+    // recommended medium
+    { from:'saas-pillar', to:'pod-startup', type:'recommended', priority:'medium' },
+    { from:'saas-pillar', to:'pod-hacks',   type:'recommended', priority:'medium' },
+  ],
+
+  2: [
+    { from:'cs-anzu',    to:'pm-pillar',  type:'existing', authority:true },
+    { from:'pm-pillar',  to:'pe-svc',     type:'recommended', priority:'critical' },
+    { from:'pm-pillar',  to:'vc-svc',     type:'recommended', priority:'critical' },
+    { from:'pe-svc',     to:'contact',    type:'recommended', priority:'critical' },
+    { from:'vc-svc',     to:'contact',    type:'recommended', priority:'critical' },
+    { from:'cs-anzu',    to:'pe-svc',     type:'recommended', priority:'high' },
+    { from:'vc-list',    to:'pe-svc',     type:'recommended', priority:'high' },
+    { from:'vc-list',    to:'vc-svc',     type:'recommended', priority:'high' },
+    { from:'pe-vs-vc',   to:'pe-svc',     type:'recommended', priority:'high' },
+    { from:'pe-blog',    to:'pe-svc',     type:'recommended', priority:'high' },
+    { from:'pm-pillar',  to:'cs-anzu',    type:'recommended', priority:'high' },
+    { from:'pm-pillar',  to:'vc-list',    type:'recommended', priority:'medium' },
+    { from:'pm-pillar',  to:'pe-vs-vc',   type:'recommended', priority:'medium' },
+    { from:'pm-pillar',  to:'pod-pe',     type:'recommended', priority:'medium' },
+  ],
+
+  3: [
+    // existing — all webinars link to /contact-us/ (1 content link each)
+    { from:'web-vibe',    to:'contact',   type:'existing' },
+    { from:'web-email',   to:'contact',   type:'existing' },
+    { from:'web-geo',     to:'contact',   type:'existing' },
+    { from:'web-agentic', to:'contact',   type:'existing' },
+    { from:'web-state-ai',to:'contact',   type:'existing' },
+    { from:'web-gads',    to:'contact',   type:'existing' },
+    { from:'web-self-pub',to:'contact',   type:'existing' },
+    // recommended critical — blog posts → hub (gap W-1, W-2)
+    { from:'web-blog1',   to:'web-hub',   type:'recommended', priority:'critical' },
+    { from:'web-blog2',   to:'web-hub',   type:'recommended', priority:'critical' },
+    { from:'web-blog3',   to:'web-hub',   type:'recommended', priority:'critical' },
+    // recommended high — hub → spokes (W-6)
+    { from:'web-hub',     to:'web-vibe',      type:'recommended', priority:'high' },
+    { from:'web-hub',     to:'web-geo',       type:'recommended', priority:'high' },
+    { from:'web-hub',     to:'web-agentic',   type:'recommended', priority:'high' },
+    { from:'web-hub',     to:'web-email',     type:'recommended', priority:'high' },
+    { from:'web-hub',     to:'web-self-pub',  type:'recommended', priority:'high' },
+    // recommended high — cross-link AI webinars (W-5)
+    { from:'web-agentic', to:'web-agentic2',  type:'recommended', priority:'high' },
+    // recommended medium
+    { from:'web-vibe',    to:'web-self-pub',  type:'recommended', priority:'medium' },
+  ],
+
+  4: [
+    // existing — sitewide widget (authority, hub → all)
+    { from:'tools-hub', to:'t-burn',      type:'existing', authority:true },
+    { from:'tools-hub', to:'t-cac',       type:'existing', authority:true },
+    { from:'tools-hub', to:'t-churn',     type:'existing', authority:true },
+    { from:'tools-hub', to:'t-roas',      type:'existing', authority:true },
+    { from:'tools-hub', to:'t-roi',       type:'existing', authority:true },
+    { from:'tools-hub', to:'t-cro',       type:'existing', authority:true },
+    // recommended critical — calcs → targeted service (T-1, T-2, T-3)
+    { from:'t-burn',    to:'cx-startup',  type:'recommended', priority:'critical' },
+    { from:'t-cac',     to:'cx-startup',  type:'recommended', priority:'critical' },
+    { from:'t-churn',   to:'cx-b2c',      type:'recommended', priority:'critical' },
+    { from:'t-roas',    to:'cx-amazon',   type:'recommended', priority:'high' },
+    { from:'t-ppc',     to:'cx-ppc',      type:'recommended', priority:'high' },
+    { from:'t-cpc',     to:'cx-ppc',      type:'recommended', priority:'high' },
+    // recommended — contact path
+    { from:'cx-startup',to:'contact',     type:'recommended', priority:'critical' },
+    { from:'cx-b2c',    to:'contact',     type:'recommended', priority:'critical' },
+    { from:'cx-amazon', to:'contact',     type:'recommended', priority:'high' },
+  ],
+
+  5: [
+    // existing — blog → hub (widget + genuine CTA, shown as authority because link-soup problem)
+    { from:'hs-hvac-seo',   to:'hs-hub',       type:'existing', authority:true },
+    { from:'hs-pest',       to:'hs-hub',       type:'existing', authority:true },
+    { from:'hs-water',      to:'hs-hub',       type:'existing', authority:true },
+    { from:'hs-hvac-mktg',  to:'hs-hub',       type:'existing', authority:true },
+    { from:'hs-roofing-seo',to:'hs-hub',       type:'existing', authority:true },
+    { from:'hs-criteria',   to:'hs-hub',       type:'existing', authority:true },
+    // existing — all → contact (CTA button)
+    { from:'hs-criteria',   to:'contact',      type:'existing' },
+    { from:'hs-why-hvac',   to:'contact',      type:'existing' },
+    { from:'hs-hvac-seo',   to:'contact',      type:'existing' },
+    // recommended critical
+    { from:'hs-hub',        to:'hs-casestudy', type:'recommended', priority:'critical' },
+    { from:'hs-criteria',   to:'hs-hub',       type:'recommended', priority:'critical' }, // genuine editorial CTA (not widget)
+    { from:'hs-hub',        to:'contact',      type:'recommended', priority:'critical' },
+    // recommended high
+    { from:'hs-hvac-seo',   to:'hs-casestudy', type:'recommended', priority:'high' },
+    { from:'hs-pest',       to:'hs-casestudy', type:'recommended', priority:'high' },
+    { from:'hs-why-hvac',   to:'hs-criteria',  type:'recommended', priority:'high' },
+    { from:'hs-casestudy',  to:'hs-hub',       type:'recommended', priority:'high' },
+    { from:'hs-hub',        to:'hs-hvac-seo',  type:'recommended', priority:'high' },
+    { from:'hs-hub',        to:'hs-criteria',  type:'recommended', priority:'high' },
+    // recommended medium
+    { from:'hs-soc-mktg',   to:'hs-hub',       type:'recommended', priority:'medium' },
+    { from:'hs-google-ads', to:'hs-hub',       type:'recommended', priority:'medium' },
+  ],
+
+  6: [
+    // existing — Amazon blog → amazon-svc (1-3 content links each)
+    { from:'ec-amz-ai',     to:'ec-amazon-svc', type:'existing' },
+    { from:'ec-amz-mgmt',   to:'ec-amazon-svc', type:'existing' },
+    { from:'ec-amz-master', to:'ec-amazon-svc', type:'existing' },
+    // existing — all → contact
+    { from:'ec-amazon-svc', to:'contact',       type:'existing' },
+    { from:'ec-fashion-svc',to:'contact',       type:'existing' },
+    // existing regression — fashion service page links back to hub (backward)
+    { from:'ec-fashion-svc',to:'ec-hub',        type:'existing', regression:true },
+    // recommended critical
+    { from:'ec-casestudy',  to:'ec-amazon-svc', type:'recommended', priority:'critical' },  // E-1
+    { from:'ec-fashion-seo',to:'ec-fashion-svc',type:'recommended', priority:'critical' },  // E-2
+    { from:'ec-fashion-mkt',to:'ec-fashion-svc',type:'recommended', priority:'critical' },  // E-2
+    // recommended high
+    { from:'ec-hub',        to:'ec-amazon-svc', type:'recommended', priority:'high' },      // E-5
+    { from:'ec-hub',        to:'ec-fashion-svc',type:'recommended', priority:'high' },      // E-6
+    { from:'ec-geo',        to:'ec-hub',        type:'recommended', priority:'high' },      // E-7
+    { from:'ec-dtc',        to:'ec-amazon-svc', type:'recommended', priority:'high' },      // E-8
+    { from:'ec-fashion-ug', to:'ec-fashion-svc',type:'recommended', priority:'high' },
+    { from:'ec-amz-ai',     to:'ec-amazon-svc', type:'recommended', priority:'high' },
+    { from:'ec-hub',        to:'ec-casestudy',  type:'recommended', priority:'high' },
+    // recommended medium
+    { from:'ec-content',    to:'ec-casestudy',  type:'recommended', priority:'medium' },    // E-9
+    { from:'ec-seo',        to:'ec-amazon-svc', type:'recommended', priority:'medium' },
+  ],
+};
+
+// ── GAP / STATS PER CLUSTER ───────────────────────────────────────────────────
+const CLUSTER_STATS = {
+  1: { critical:8,  high:11, regressions:28, total:23, finding:'All 4 primary conversion pages have zero editorial inlinks — only sitewide nav links.' },
+  2: { critical:4,  high:7,  regressions:0,  total:14, finding:'PE/VC cluster is thin but strategically critical — backbone of lead qualification.' },
+  3: { critical:2,  high:5,  regressions:0,  total:7,  finding:'Blog posts about webinar marketing never link to actual webinar hub or individual sessions.' },
+  4: { critical:3,  high:2,  regressions:0,  total:8,  finding:'/calculators/ is a duplicate hub with 966 inlinks that should 301 → /marketing-tools/. Calcs spray authority equally across all 29 service pages.' },
+  5: { critical:2,  high:6,  regressions:0,  total:8,  finding:'Link soup: each blog post broadcasts 28–35 links to all service pages via a sitewide content widget. Genuine editorial signals are diluted.' },
+  6: { critical:4,  high:5,  regressions:1,  total:9,  finding:'The 130% Amazon sales growth case study has zero links to the Amazon Ads service page. Best proof asset in the cluster is not converting.' },
+};
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function cc(c) {
+  const map = { 0:'#10B981', 1:'#3B82F6', 2:'#A855F7', 3:'#06B6D4', 4:'#F59E0B', 5:'#10B981', 6:'#F97316' };
+  return map[c] || '#64748b';
+}
 function nodeRadius(n) {
+  if (n.deadWeight) return n.size * 1.1;
   if (n.stage === 'Awareness')     return n.size * 1.05;
   if (n.stage === 'Consideration') return n.size * 1.25;
-  return n.size * 1.55; // Decision diamond
+  return n.size * 1.55;
 }
-
 function edgeColor(e) {
   if (e.regression) return '#ef4444';
   if (e.authority)  return '#64748b';
-  if (e.type === 'recommended') {
-    if (e.priority === 'critical') return '#f59e0b';
-    if (e.priority === 'high')     return '#22c55e';
-    return '#818cf8';
-  }
+  if (e.type === 'recommended') return e.priority === 'critical' ? '#f59e0b' : e.priority === 'high' ? '#22c55e' : '#818cf8';
   return '#334155';
 }
-
-// Bezier path between two nodes
-function buildPath(a, b, edge, curveOffset = 0) {
+function buildPath(a, b, edge, offset = 0) {
   const dx = b.x - a.x, dy = b.y - a.y;
   const len = Math.sqrt(dx*dx + dy*dy) || 1;
   const ux = dx/len, uy = dy/len;
@@ -304,319 +437,270 @@ function buildPath(a, b, edge, curveOffset = 0) {
   const sx = a.x + ux*sr, sy = a.y + uy*sr;
   const ex = b.x - ux*tr, ey = b.y - uy*tr;
   const mx = (sx+ex)/2, my = (sy+ey)/2;
-
-  if (edge.regression) {
-    // Arc dramatically below — regressions go right-to-left so we sweep below
-    const cpY = Math.max(sy, ey) + 110 + curveOffset * 30;
-    return `M ${sx} ${sy} Q ${mx} ${cpY} ${ex} ${ey}`;
-  }
-  if (edge.authority) {
-    // Arc above — authority links sweep over the top
-    const cpY = Math.min(sy, ey) - 70 - curveOffset * 20;
-    return `M ${sx} ${sy} Q ${mx} ${cpY} ${ex} ${ey}`;
-  }
-  // Forward: smooth cubic S-curve with spread for parallel edges
-  const perp = curveOffset * 22; // perpendicular spread
-  const cp1x = sx + (ex-sx)*0.38, cp1y = sy + perp;
-  const cp2x = sx + (ex-sx)*0.62, cp2y = ey + perp;
-  return `M ${sx} ${sy} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${ex} ${ey}`;
+  if (edge.regression) return `M ${sx} ${sy} Q ${mx} ${Math.max(sy,ey)+100+offset*25} ${ex} ${ey}`;
+  if (edge.authority)  return `M ${sx} ${sy} Q ${mx} ${Math.min(sy,ey)-55-offset*15} ${ex} ${ey}`;
+  const perp = offset * 20;
+  return `M ${sx} ${sy} C ${sx+(ex-sx)*.38} ${sy+perp} ${sx+(ex-sx)*.62} ${ey+perp} ${ex} ${ey}`;
+}
+function assignOffsets(edges) {
+  const groups = {};
+  edges.forEach((e, i) => {
+    const key = [e.from, e.to, e.regression?'r':e.authority?'a':'f'].join('|');
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(i);
+  });
+  const off = new Array(edges.length).fill(0);
+  Object.values(groups).forEach(idxs => {
+    const mid = (idxs.length-1)/2;
+    idxs.forEach((idx, i) => { off[idx] = i - mid; });
+  });
+  return off;
 }
 
-// ── components ──────────────────────────────────────────────────────────────
+// ── COMPONENTS ────────────────────────────────────────────────────────────────
 function NodeShape({ node, dimmed, hovered }) {
-  const c = cc(node.cluster);
+  const c = node.external ? '#475569' : cc(node.cluster);
   const r = node.size;
-  const opacity = dimmed ? 0.12 : 1;
-  const fillOpacity = hovered ? 0.3 : 0.12;
-  const strokeW = hovered ? 2.5 : node.primary ? 2.2 : 1.5;
-  const stroke = hovered ? '#f8fafc' : node.primary ? '#fbbf24' : c;
-  const fill = c;
-  const filter = hovered ? `url(#glow-${node.cluster || 0})` : undefined;
-  const props = { fill, fillOpacity, stroke, strokeWidth: strokeW, opacity, filter };
+  const opacity = dimmed ? 0.1 : node.external ? 0.45 : 1;
+  const fillOp = hovered ? 0.32 : 0.12;
+  const strokeW = hovered ? 2.5 : node.primary ? 2.2 : node.deadWeight ? 1.5 : 1.5;
+  const stroke = node.deadWeight ? '#ef4444'
+    : hovered ? '#f8fafc'
+    : node.primary ? '#fbbf24'
+    : c;
+  const dashArr = node.deadWeight ? '4 3' : undefined;
+  const filter = hovered ? `url(#glow)` : undefined;
+  const props = { fill: c, fillOpacity: fillOp, stroke, strokeWidth: strokeW, opacity, filter, strokeDasharray: dashArr };
 
-  if (node.stage === 'Awareness') {
+  if (node.stage === 'Awareness' || node.external)
     return <circle cx={node.x} cy={node.y} r={r} {...props} />;
-  }
   if (node.stage === 'Consideration') {
     const s = r * 1.7;
     return <rect x={node.x-s/2} y={node.y-s/2} width={s} height={s} rx={4} {...props} />;
   }
   const d = r * 1.6;
-  const pts = `${node.x},${node.y-d} ${node.x+d},${node.y} ${node.x},${node.y+d} ${node.x-d},${node.y}`;
-  return <polygon points={pts} {...props} />;
+  return <polygon points={`${node.x},${node.y-d} ${node.x+d},${node.y} ${node.x},${node.y+d} ${node.x-d},${node.y}`} {...props} />;
 }
 
-function EdgePath({ edge, dimmed, curveOffset }) {
-  const a = nodeById[edge.from], b = nodeById[edge.to];
+function EdgePath({ edge, nodeMap, offset }) {
+  const a = nodeMap[edge.from], b = nodeMap[edge.to];
   if (!a || !b) return null;
-  const d = buildPath(a, b, edge, curveOffset);
+  const d = buildPath(a, b, edge, offset);
   const color = edgeColor(edge);
-  const markId = edge.regression ? 'arr-reg'
-    : edge.authority ? 'arr-auth'
-    : edge.type === 'recommended' ? `arr-${edge.priority}`
-    : 'arr-exist';
   const isDashed = edge.type === 'recommended';
   const isAuth = edge.authority;
-  const dashArray = isDashed
-    ? (edge.priority === 'critical' ? '8 5' : '6 5')
-    : isAuth ? '3 5' : 'none';
-  const strokeW = isDashed && edge.priority === 'critical' ? 2.2 : 1.6;
-  const opacity = dimmed ? 0.05
-    : edge.regression ? 0.75
-    : isDashed ? 0.88
-    : isAuth ? 0.4
-    : 0.38;
-
-  return (
-    <path d={d} fill="none"
-      stroke={color} strokeWidth={strokeW}
-      strokeDasharray={dashArray === 'none' ? undefined : dashArray}
-      opacity={opacity}
-      markerEnd={`url(#${markId})`}
-    />
-  );
-}
-
-// Count parallel edges between same source/target group for spread
-function assignCurveOffsets(edges) {
-  const groups = {};
-  edges.forEach((e, i) => {
-    const key = [e.from, e.to, e.regression ? 'reg' : e.authority ? 'auth' : 'fwd'].join('|');
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(i);
-  });
-  const offsets = new Array(edges.length).fill(0);
-  Object.values(groups).forEach(idxs => {
-    const mid = (idxs.length - 1) / 2;
-    idxs.forEach((idx, pos) => { offsets[idx] = pos - mid; });
-  });
-  return offsets;
-}
-
-// Dot grid pattern background
-function DotGrid() {
-  return (
-    <defs>
-      <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-        <circle cx="1" cy="1" r="1" fill="#1e293b" />
-      </pattern>
-    </defs>
-  );
+  const dashArray = isDashed ? (edge.priority==='critical' ? '8 5' : '6 5') : isAuth ? '3 5' : undefined;
+  const sw = isDashed && edge.priority==='critical' ? 2.2 : 1.5;
+  const opacity = edge.regression ? 0.75 : isDashed ? 0.88 : isAuth ? 0.35 : 0.35;
+  const markId = edge.regression ? 'arr-reg' : edge.authority ? 'arr-auth'
+    : edge.type==='recommended' ? `arr-${edge.priority}` : 'arr-exist';
+  return <path d={d} fill="none" stroke={color} strokeWidth={sw} strokeDasharray={dashArray} opacity={opacity} markerEnd={`url(#${markId})`} />;
 }
 
 function App() {
-  const [tooltip, setTooltip] = React.useState(null);
-  const [hoveredCluster, setHoveredCluster] = React.useState(null);
-  const [hoveredNode, setHoveredNode] = React.useState(null);
+  const [cluster, setCluster] = React.useState(1);
   const [showOnly, setShowOnly] = React.useState('all');
+  const [tooltip, setTooltip] = React.useState(null);
+  const [hoveredNode, setHoveredNode] = React.useState(null);
 
-  const filteredEdges = EDGES.filter(e => {
+  const nodes = ALL_NODES[cluster] || [];
+  const rawEdges = ALL_EDGES[cluster] || [];
+  const nodeMap = React.useMemo(() => Object.fromEntries(nodes.map(n => [n.id, n])), [nodes]);
+
+  const filteredEdges = rawEdges.filter(e => {
     if (showOnly === 'existing')    return e.type === 'existing';
     if (showOnly === 'recommended') return e.type === 'recommended';
     if (showOnly === 'critical')    return e.type === 'recommended' && e.priority === 'critical';
     return true;
   });
+  const offsets = React.useMemo(() => assignOffsets(filteredEdges), [filteredEdges]);
 
-  const curveOffsets = React.useMemo(() => assignCurveOffsets(filteredEdges), [filteredEdges]);
-
-  function onNodeEnter(evt, node) {
-    const inLinks  = EDGES.filter(e => e.to   === node.id).length;
-    const outLinks = EDGES.filter(e => e.from === node.id).length;
-    setTooltip({ x: evt.clientX + 16, y: evt.clientY - 12, node, inLinks, outLinks });
-    setHoveredCluster(node.cluster);
+  function onEnter(evt, node) {
+    const inLinks  = rawEdges.filter(e => e.to   === node.id).length;
+    const outLinks = rawEdges.filter(e => e.from === node.id).length;
+    setTooltip({ x: evt.clientX+16, y: evt.clientY-12, node, inLinks, outLinks });
     setHoveredNode(node.id);
   }
-  function onNodeLeave() {
-    setTooltip(null);
-    setHoveredCluster(null);
-    setHoveredNode(null);
-  }
+  function onLeave() { setTooltip(null); setHoveredNode(null); }
 
-  const filters = [
-    { key:'all',         label:'All links',       cls:'active-all'   },
-    { key:'existing',    label:'Existing only',   cls:'active-exist'  },
-    { key:'recommended', label:'Recommended',     cls:'active-rec'   },
-    { key:'critical',    label:'🔴 Critical only', cls:'active-crit'  },
+  const stats = CLUSTER_STATS[cluster];
+  const clrColor = CLUSTER_META[cluster]?.color || '#3B82F6';
+
+  const COLS = [
+    { label:'AWARENESS',     x:22,  lineX:460  },
+    { label:'CONSIDERATION', x:466, lineX:798  },
+    { label:'DECISION',      x:804, lineX:1108 },
+    { label:'SHARED',        x:1114,lineX:null  },
   ];
 
-  const COLUMNS = [
-    { label:'AWARENESS',     x:22,  lineX:450  },
-    { label:'CONSIDERATION', x:458, lineX:745  },
-    { label:'DECISION',      x:752, lineX:1065 },
-    { label:'SHARED',        x:1072, lineX:null },
+  const MARKERS = [
+    { id:'arr-exist',    c:'#475569' },
+    { id:'arr-auth',     c:'#64748b' },
+    { id:'arr-reg',      c:'#ef4444' },
+    { id:'arr-critical', c:'#f59e0b' },
+    { id:'arr-high',     c:'#22c55e' },
+    { id:'arr-medium',   c:'#818cf8' },
   ];
 
-  const BANDS = [
-    { color:'#3B82F6', y:55,  h:410, label:'CLUSTER 1 — SaaS Growth Marketing',  ly:75  },
-    { color:'#A855F7', y:480, h:310, label:'CLUSTER 2 — Private Markets (PE / VC)', ly:500 },
+  const FILTERS = [
+    { key:'all',         label:'All links',       cls:'fa' },
+    { key:'existing',    label:'Existing',        cls:'fe' },
+    { key:'recommended', label:'Recommended',     cls:'fr' },
+    { key:'critical',    label:'🔴 Critical only', cls:'fc' },
   ];
 
-  const MARKER_DEFS = [
-    { id:'arr-exist',    color:'#475569' },
-    { id:'arr-auth',     color:'#64748b' },
-    { id:'arr-reg',      color:'#ef4444' },
-    { id:'arr-critical', color:'#f59e0b' },
-    { id:'arr-high',     color:'#22c55e' },
-    { id:'arr-medium',   color:'#818cf8' },
-  ];
-
-  const GLOW_FILTERS = [
-    { id:'glow-1', color:'#3B82F6' },
-    { id:'glow-2', color:'#A855F7' },
-    { id:'glow-0', color:'#10B981' },
-  ];
-
-  const STATS = [
-    { color:'#ef4444', value:'8',  label:'Critical gaps',          sub:'Zero content inlinks to primary conversion targets' },
-    { color:'#f59e0b', value:'11', label:'High-priority links',     sub:'Orphaned pages + missing consideration → conversion paths' },
-    { color:'#f97316', value:'28', label:'Funnel regressions',      sub:'Conversion pages linking backward to case studies' },
-    { color:'#3B82F6', value:'23', label:'Total recommendations',   sub:'Clusters 1 + 2 (SaaS + PE/VC)' },
+  const STAT_CARDS = [
+    { label:'Critical gaps',       value: stats.critical,    color:'#ef4444', sub:'Zero targeted links to conversion pages' },
+    { label:'High-priority links',  value: stats.high,        color:'#f59e0b', sub:'Orphaned pages + missing conversion paths' },
+    { label:'Funnel regressions',   value: stats.regressions, color:'#f97316', sub:'Backward links through the funnel' },
+    { label:'Total recommendations',value: stats.total,       color: clrColor,  sub:`Cluster ${cluster} (${CLUSTER_META[cluster]?.name})` },
   ];
 
   return (
     <div>
-      {/* ── Header ── */}
+      {/* Header */}
       <div className="app-header">
         <div>
           <div className="header-eyebrow">Phase 5 · Internal Linking Engine</div>
           <div className="header-title">Internal Linking Map</div>
-          <div className="header-sub">Azarian Growth Agency · Clusters 1 (SaaS) + 2 (PE/VC)</div>
-        </div>
-        <div className="filter-bar">
-          {filters.map(f => (
-            <button key={f.key}
-              className={`fbtn${showOnly === f.key ? ' ' + f.cls : ''}`}
-              onClick={() => setShowOnly(f.key)}>
-              {f.label}
-            </button>
-          ))}
+          <div className="header-sub">Azarian Growth Agency · {CLUSTER_META[cluster]?.name}</div>
         </div>
       </div>
 
-      {/* ── Map ── */}
+      {/* Cluster tabs */}
+      <div className="cluster-tabs">
+        {Object.entries(CLUSTER_META).map(([k, meta]) => (
+          <button key={k}
+            className={`ctab${cluster === +k ? ' active' : ''}`}
+            style={cluster === +k ? { background: meta.color } : {}}
+            onClick={() => { setCluster(+k); setShowOnly('all'); }}>
+            {k}. {meta.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Filter pills */}
+      <div className="filter-row">
+        <span className="filter-label">Show</span>
+        {FILTERS.map(f => (
+          <button key={f.key}
+            className={`fpill${showOnly === f.key ? ' ' + f.cls : ''}`}
+            onClick={() => setShowOnly(f.key)}>
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Key finding banner */}
+      <div style={{ margin:'8px 28px 0', padding:'8px 14px', background:'rgba(30,41,59,.5)', borderRadius:8, borderLeft:`3px solid ${clrColor}`, fontSize:11, color:'#94a3b8' }}>
+        <span style={{ color:'#f1f5f9', fontWeight:700 }}>Key finding: </span>{stats.finding}
+      </div>
+
+      {/* Map */}
       <div className="map-wrap">
         <div className="svg-container">
-          <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display:'block', minHeight:320 }}>
-
-            {/* Defs: dot grid, glow filters, arrowheads */}
+          <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display:'block', minHeight:300 }}>
             <defs>
-              <DotGrid />
-              {GLOW_FILTERS.map(({ id, color }) => (
-                <filter key={id} id={id} x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor={color} floodOpacity="0.6" />
-                </filter>
-              ))}
-              {MARKER_DEFS.map(({ id, color }) => (
+              <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+                <circle cx="1" cy="1" r="1" fill="#1e293b" />
+              </pattern>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor={clrColor} floodOpacity="0.6" />
+              </filter>
+              {MARKERS.map(({id, c}) => (
                 <marker key={id} id={id} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                  <polygon points="0 0, 8 4, 0 8" fill={color} opacity="0.85" />
+                  <polygon points="0 0, 8 4, 0 8" fill={c} opacity="0.85" />
                 </marker>
               ))}
             </defs>
 
-            {/* Background dot grid */}
             <rect width={W} height={H} fill="url(#dots)" />
 
-            {/* Cluster bands */}
-            {BANDS.map(b => (
-              <g key={b.label}>
-                <rect x={10} y={b.y} width={W-20} height={b.h} rx={10}
-                  fill={b.color} fillOpacity={0.03}
-                  stroke={b.color} strokeOpacity={0.08} strokeWidth={1} />
-                <text x={24} y={b.ly} fontSize={10} fill={b.color} fillOpacity={0.55} fontWeight={700} letterSpacing={1.2}>
-                  {b.label}
-                </text>
-              </g>
-            ))}
+            {/* Cluster band */}
+            <rect x={10} y={44} width={W-20} height={H-54} rx={10}
+              fill={clrColor} fillOpacity={0.03} stroke={clrColor} strokeOpacity={0.07} strokeWidth={1} />
 
-            {/* Column dividers + headers */}
-            {COLUMNS.map(col => (
+            {/* Column headers + dividers */}
+            {COLS.map(col => (
               <g key={col.label}>
-                <text x={col.x + 4} y={36} fontSize={9} fill="#1e3a5f" fontWeight={800} letterSpacing={1.8}>
-                  {col.label}
-                </text>
-                {col.lineX && (
-                  <line x1={col.lineX} y1={44} x2={col.lineX} y2={H-12}
-                    stroke="#1e293b" strokeWidth={1} strokeDasharray="4 6" />
-                )}
+                <text x={col.x+6} y={34} fontSize={9} fill="#1e3a5f" fontWeight={800} letterSpacing={1.8}>{col.label}</text>
+                {col.lineX && <line x1={col.lineX} y1={42} x2={col.lineX} y2={H-10} stroke="#1e293b" strokeWidth={1} strokeDasharray="4 6" />}
               </g>
             ))}
 
             {/* Edges */}
-            {filteredEdges.map((edge, i) => {
-              const dimmed = hoveredCluster !== null
-                && nodeById[edge.from]?.cluster !== hoveredCluster
-                && nodeById[edge.to]?.cluster !== hoveredCluster;
-              return <EdgePath key={i} edge={edge} dimmed={dimmed} curveOffset={curveOffsets[i]} />;
-            })}
+            {filteredEdges.map((edge, i) => (
+              <EdgePath key={i} edge={edge} nodeMap={nodeMap} offset={offsets[i]} />
+            ))}
 
             {/* Nodes */}
-            {NODES.map(node => {
-              const dimmed = hoveredCluster !== null && node.cluster !== hoveredCluster && node.id !== 'contact';
+            {nodes.map(node => {
               const hovered = hoveredNode === node.id;
-              const c = cc(node.cluster);
-              const labelY = node.y + nodeRadius(node) + 14;
-
+              const c = node.external ? '#475569' : cc(node.cluster);
+              const labelY = node.y + nodeRadius(node) + 13;
+              const labelColor = node.external ? '#334155' : node.deadWeight ? '#ef4444' : '#94a3b8';
               return (
                 <g key={node.id} style={{ cursor:'pointer' }}
-                  onMouseEnter={e => onNodeEnter(e, node)}
-                  onMouseLeave={onNodeLeave}>
-                  <NodeShape node={node} dimmed={dimmed} hovered={hovered} />
-                  {node.primary && (
-                    <text x={node.x} y={node.y - nodeRadius(node) - 6}
-                      textAnchor="middle" fontSize={11} fill="#fbbf24" opacity={dimmed ? 0.1 : 1}>★</text>
+                  onMouseEnter={e => onEnter(e, node)} onMouseLeave={onLeave}>
+                  <NodeShape node={node} hovered={hovered} />
+                  {node.primary && !node.external && (
+                    <text x={node.x} y={node.y - nodeRadius(node) - 5} textAnchor="middle" fontSize={11} fill="#fbbf24">★</text>
                   )}
-                  <text x={node.x} y={labelY}
-                    textAnchor="middle" fontSize={11} fill={dimmed ? '#1e293b' : '#94a3b8'}
-                    fontWeight={node.primary ? 600 : 400}
-                    style={{ pointerEvents:'none', userSelect:'none' }}>
+                  {node.deadWeight && (
+                    <text x={node.x} y={node.y + 4} textAnchor="middle" fontSize={10} fill="#ef4444" fontWeight={700} style={{pointerEvents:'none'}}>✕</text>
+                  )}
+                  {node.external && (
+                    <text x={node.x} y={node.y - nodeRadius(node) - 5} textAnchor="middle" fontSize={9} fill="#475569" fontStyle="italic">ext.</text>
+                  )}
+                  <text x={node.x} y={labelY} textAnchor="middle" fontSize={10} fill={labelColor}
+                    fontWeight={node.primary ? 600 : 400} style={{ pointerEvents:'none', userSelect:'none' }}>
                     {node.label}
                   </text>
                 </g>
               );
             })}
-
-            {/* Contact shared label */}
-            <text x={1190} y={330} textAnchor="middle" fontSize={9} fill="#10B981" fillOpacity={0.55} fontWeight={700} letterSpacing={1.2}>SHARED</text>
           </svg>
         </div>
       </div>
 
-      {/* ── Legend ── */}
+      {/* Legend */}
       <div className="legend-section">
         <div className="legend-row">
-          <span className="legend-group-label">Nodes</span>
+          <span className="legend-group">Nodes</span>
           {[
-            { shape:'circle',  color:'#3B82F6', label:'Awareness (Pillar / Supporting)' },
-            { shape:'square',  color:'#3B82F6', label:'Consideration (Case Studies)' },
-            { shape:'diamond', color:'#3B82F6', label:'Decision (Conversion page)' },
-            { shape:'star',    color:'#fbbf24', label:'★ Primary conversion target' },
+            { shape:'circle',   color:'#3B82F6', label:'Awareness' },
+            { shape:'square',   color:'#3B82F6', label:'Consideration' },
+            { shape:'diamond',  color:'#3B82F6', label:'Decision / Conversion' },
+            { shape:'star',     color:'#fbbf24', label:'★ Primary target' },
+            { shape:'dw',       color:'#ef4444', label:'✕ Dead weight' },
+            { shape:'ext',      color:'#475569', label:'External cluster (cross-link target)' },
           ].map(item => (
             <div className="legend-item" key={item.label}>
               <svg width={16} height={16} style={{ flexShrink:0 }}>
-                {item.shape === 'circle'  && <circle cx={8} cy={8} r={5.5} fill="none" stroke={item.color} strokeWidth={1.5}/>}
-                {item.shape === 'square'  && <rect x={2.5} y={2.5} width={11} height={11} fill="none" stroke={item.color} strokeWidth={1.5}/>}
-                {item.shape === 'diamond' && <polygon points="8,1 15,8 8,15 1,8" fill="none" stroke={item.color} strokeWidth={1.5}/>}
-                {item.shape === 'star'    && <text x={2} y={13} fontSize={13} fill={item.color}>★</text>}
+                {item.shape==='circle'  && <circle cx={8} cy={8} r={5.5} fill="none" stroke={item.color} strokeWidth={1.5}/>}
+                {item.shape==='square'  && <rect x={2.5} y={2.5} width={11} height={11} fill="none" stroke={item.color} strokeWidth={1.5}/>}
+                {item.shape==='diamond' && <polygon points="8,1 15,8 8,15 1,8" fill="none" stroke={item.color} strokeWidth={1.5}/>}
+                {item.shape==='star'    && <text x={2} y={13} fontSize={13} fill={item.color}>★</text>}
+                {item.shape==='dw'      && <circle cx={8} cy={8} r={5.5} fill="none" stroke={item.color} strokeWidth={1.5} strokeDasharray="3 2"/>}
+                {item.shape==='ext'     && <circle cx={8} cy={8} r={5.5} fill="none" stroke={item.color} strokeWidth={1.5} opacity={0.45}/>}
               </svg>
               <span>{item.label}</span>
             </div>
           ))}
         </div>
-
         <div className="legend-row">
-          <span className="legend-group-label">Links</span>
+          <span className="legend-group">Links</span>
           {[
             { dash:'8 5', sw:2.2, color:'#f59e0b', label:'Recommended — Critical' },
-            { dash:'6 5', sw:1.6, color:'#22c55e', label:'Recommended — High' },
-            { dash:'6 5', sw:1.6, color:'#818cf8', label:'Recommended — Medium' },
-            { dash:null,  sw:1.6, color:'#ef4444', label:'Existing regression (backward funnel)' },
-            { dash:'3 5', sw:1.6, color:'#64748b', label:'Existing authority (reclassify)' },
+            { dash:'6 5', sw:1.5, color:'#22c55e', label:'Recommended — High' },
+            { dash:'6 5', sw:1.5, color:'#818cf8', label:'Recommended — Medium' },
+            { dash:null,  sw:1.5, color:'#ef4444', label:'Existing regression' },
+            { dash:'3 5', sw:1.5, color:'#64748b', label:'Existing authority (widget/structural)' },
+            { dash:null,  sw:1.5, color:'#334155', label:'Existing editorial' },
           ].map(item => (
             <div className="legend-item" key={item.label}>
               <svg width={30} height={12} style={{ flexShrink:0 }}>
-                <line x1={2} y1={6} x2={28} y2={6}
-                  stroke={item.color} strokeWidth={item.sw}
-                  strokeDasharray={item.dash || undefined} />
+                <line x1={2} y1={6} x2={28} y2={6} stroke={item.color} strokeWidth={item.sw} strokeDasharray={item.dash||undefined}/>
               </svg>
               <span>{item.label}</span>
             </div>
@@ -624,9 +708,9 @@ function App() {
         </div>
       </div>
 
-      {/* ── Stats ── */}
+      {/* Stats */}
       <div className="stats-grid">
-        {STATS.map(s => (
+        {STAT_CARDS.map(s => (
           <div className="stat-card" key={s.label}>
             <div className="stat-accent" style={{ background: s.color }} />
             <div className="stat-value" style={{ color: s.color }}>{s.value}</div>
@@ -636,26 +720,23 @@ function App() {
         ))}
       </div>
 
-      {/* ── Tooltip ── */}
+      {/* Tooltip */}
       {tooltip && (
         <div className="tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
           <div className="t-title">{tooltip.node.label}</div>
           <div className="t-url">{tooltip.node.url}</div>
-          <span className="badge" style={{ background:`${cc(tooltip.node.cluster)}20`, color:cc(tooltip.node.cluster) }}>
-            {tooltip.node.cluster === 0 ? 'Shared' : `Cluster ${tooltip.node.cluster}`}
+          <span className="badge" style={{ background:`${cc(tooltip.node.cluster)}20`, color: tooltip.node.external ? '#64748b' : cc(tooltip.node.cluster) }}>
+            {tooltip.node.external ? 'Cross-cluster' : tooltip.node.cluster === 0 ? 'Shared' : `Cluster ${tooltip.node.cluster}`}
           </span>
-          <span className="badge" style={{ background:'#1e293b', color:'#94a3b8', border:'1px solid #334155' }}>
-            {tooltip.node.stage}
+          <span className="badge" style={{ background:'#1e293b', color:'#94a3b8', border:'1px solid #334155' }}>{tooltip.node.stage}</span>
+          <span className="badge" style={{ background: tooltip.node.deadWeight ? '#1f0909' : '#1e293b', color: tooltip.node.deadWeight ? '#ef4444' : '#94a3b8', border:'1px solid #334155' }}>
+            {tooltip.node.deadWeight ? '✕ Dead Weight' : tooltip.node.role}
           </span>
-          <span className="badge" style={{ background:'#1e293b', color:'#94a3b8', border:'1px solid #334155' }}>
-            {tooltip.node.role}
-          </span>
-          {tooltip.node.primary && (
-            <span className="badge" style={{ background:'#451a03', color:'#fbbf24' }}>★ Primary target</span>
-          )}
+          {tooltip.node.primary && <span className="badge" style={{ background:'#451a03', color:'#fbbf24' }}>★ Primary target</span>}
+          {tooltip.node.external && <span className="badge" style={{ background:'#1e293b', color:'#64748b', border:'1px solid #334155' }}>Ext. — cross-cluster link target</span>}
           <div className="t-stats">
-            <div>Inlinks <span>{tooltip.inLinks}</span></div>
-            <div>Outlinks <span>{tooltip.outLinks}</span></div>
+            <div>In-cluster in <span>{tooltip.inLinks}</span></div>
+            <div>In-cluster out <span>{tooltip.outLinks}</span></div>
           </div>
         </div>
       )}
